@@ -159,5 +159,16 @@ no_ two = TWO;
 int arr[][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 print_array(arr,3,3);
 
+
+
+if(NULL == (void*)0)
+printf("*0\n");
+
+if(NULL == (void*)1)
+printf("*1");
+
+if(NULL == (void*)-1)
+	printf("*-1" );
+
 return 0;
 }
