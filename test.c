@@ -170,5 +170,11 @@ printf("*1");
 if(NULL == (void*)-1)
 	printf("*-1" );
 
+char *char_ptr;
+char ch = 'a';
+char_ptr =  &ch;
+printf("%lu %lu\n",sizeof(char_ptr), sizeof(*char_ptr) );
+
+
 return 0;
 }
