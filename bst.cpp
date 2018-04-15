@@ -25,11 +25,11 @@ struct Node* insert(struct Node *root, int num) {
     
 	if(root == NULL) {
 		struct Node *temp = creatNode(num);
-		return temp;
-	} else if (num <= root->val)  
+		return temp;}
+     if (num <= root->val)  
 	  root->left = insert(root->left,num);
-	  else root->right = insert(root->right,num);   
-   return root;
+	 else root->right = insert(root->right,num);   
+   //return root;
 }
 
 void inorder(struct Node * root) {
@@ -85,12 +85,15 @@ int main() {
 
 struct Node * root = NULL;
 root = insert(root,4);
+printf("root_val:%d\n",root->val );
 root = insert(root,2);
+printf("root_val:%d\n",root->val );
 root = insert(root,1);
 root = insert(root,3);
 root = insert(root,6);
 root = insert(root,7);
 root = insert(root,5);
+printf("root_val:%d\n",root->val );
 //root = insert(root,8);
 printf("%s\n","Inorder traversal:" );
 inorder(root);

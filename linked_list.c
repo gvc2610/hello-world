@@ -67,4 +67,16 @@ print_list();
 reverse();
 print_list();
 
+
+struct Node *temp;
+struct Node *arr = (struct Node *) malloc(sizeof(struct Node)*2);
+arr[0].val =  1;
+arr[1].val = 2;
+temp = arr;
+
+// arr[0].val = 1;
+// arr[1].val = 2;
+
+// printf("%d\n",temp. );
+
 }

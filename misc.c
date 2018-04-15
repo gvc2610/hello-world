@@ -34,11 +34,47 @@ return num;
 
 }
 
+unsigned int bit_reverse(unsigned int num) { 
+
+  num = ((num & 0xaaaaaaaa) >> 1 ) | ((num & 0x55555555) << 1);
+  num = ((num & 0xcccccccc) >> 2 ) | ((num & 0x33333333) << 2);
+  num = ((num & 0xf0f0f0f0) >> 4 ) | ((num & 0x0f0f0f0f) << 4);
+  num = ((num & 0xff00ff00) >> 8 ) | ((num & 0x00ff00ff) << 8);
+  num = ((num & 0xffff0000) >> 16 ) | ((num & 0x0000ffff) << 16);
+
+  return num;
+}
+
+void print_powerset(char *str) {
+	int n = strlen(str);
+	printf("strlen: %d\n",n );
+
+
+	for(int i=0; i< pow(2,n) ; i++) {
+         int n = i, cnt = 0;
+		while(n) {
+	      if(n&0x1) printf("%c",str[cnt]);
+	      n = n>>1; cnt++;
+		}
+      printf("\n");
+		
+	}
+}
+
+int set_bits(unsigned int n) {
+int cnt = 0;
+	while(n) {
+		cnt++;
+		n = n&(n-1);
+	}
+return cnt;
+}
+
 
 int main() {
 
 char *ch_arr = "34";
-char arr[] = "99999999";
+char arr[] = "99";
 int iarr[] = {1,2,3,4,5};
 
 printf("%d\n",INT_MAX );
@@ -62,6 +98,15 @@ if(ch[0])
 printf("little endian\n");
 else
 printf("big endian\n");
+
+unsigned int bits = 0xdeadbeef;
+printf(" bits:%x rev_bits:%x  \n",bits,bit_reverse(bits) );
+
+char comb[] = {'a','b','c'}; 
+
+print_powerset(comb);
+
+printf("set_bit_cnt:%d\n",set_bits(15) );
 
 
 }
