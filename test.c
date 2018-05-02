@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <math.h>
 #include "header.h"
+#include <string.h>
 
 #define A_MAX(_x, _y)       ((_x) > (_y) ? (_x) : (_y))
 
@@ -185,6 +186,23 @@ char ch = 'a';
 char_ptr =  &ch;
 printf("%lu %lu\n\n\n",sizeof(char_ptr), sizeof(*char_ptr) );
 
+
+char char_ptr1[] = {'a','b','c'};
+char *char_str = "asdf";
+char *char_dyna = (char*)malloc(3);
+char val_a = 5;
+int *ptra = &val_a;
+
+printf("char_ptr arr:%lu %p %p %p\n", sizeof(char_ptr1),char_ptr1,char_ptr1+1, &char_ptr1[0]);
+
+
+// Dont dare to get the address of char_ptr. It is on the stack. So &char_ptr is of no use 
+printf("sizeof(char_str):%d  char_str:%p &char_str:%p char_str[0]:%c\n",sizeof(char_str),char_str, &char_str,char_str[0]);
+
+printf("sizeof(char_dyna):%d char_dyna:%p &char_dyna:%p char_dyna[0]:%c\n",sizeof(char_dyna),char_str, &char_str,char_str[0]);
+
+printf("val_a:%d ptra:%p &ptra:%p &ptra +1:%p &val_a:%p  &val_a+1:%p \n",val_a, ptra, &ptra, &ptra+1, &val_a, &(val_a) +1);
+
 abc[0].a = 1;
 abc[0].b =2;
 abc[1].a = 3;
@@ -196,14 +214,21 @@ memset((void*)&abc, 0, sizeof(abc));
 printf("%d  %d   %d\n",sizeof(struct ABC), sizeof(abc),sizeof(def) );
 printf("%d  %d  %d  %d\n",abc[0].a, abc[0].b, abc[1].a, abc[1].b );
 
+
+
+int * ptr1 = malloc(sizeof(int));
+*ptr1 = 0xdeadbeef;
+int val1 = *ptr1;
+int val2 = (int) *((char *) ptr1);
+
+
+printf("val2:%x\n",val2 );
+
 return 0;
 }
 
 
 
-
-#include <stdio.h>
-#include <stdlib.h>
  
 /* Write a function f(a, b) which takes two character string 
 arguments and returns a string containing only the characters
@@ -284,7 +309,9 @@ char * solution_linear(const char a[], const char b[]) {
         returns. But it needs to be freed in main */
     return common;
 }
-     
+
+
+/*     
 int main() {
     char *a = "asdfqwer";
     char b[] = "skelrpfa";
@@ -305,3 +332,6 @@ a: asdfqwer
 b: skelrpfa
 common square: asfer
 common linear: asfer
+
+
+*/

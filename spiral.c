@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 int cnt = 1;
-int R = 4,C = 3;
+int R = 4,C = 4;
 
 void traverese_Left2Right(int A[R][C], int left,int right, int posRow) {
    for(int i = left; i <= right; i++) {
@@ -27,6 +27,7 @@ void traverese_Bottom2Top(int A[R][C], int bottom,int top,int negCol) {
 		A[i][negCol] = cnt++; printf("%d \n",cnt-1 );
 	}
 }
+
 
 int main() {
 

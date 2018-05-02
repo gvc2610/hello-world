@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <limits.h>
+#include <stdint.h>
 
 int a2i(char A[]) {
 
@@ -70,6 +71,21 @@ int cnt = 0;
 return cnt;
 }
 
+int even_bits(uint32_t num) {
+
+ num = num ^ (num >> 16);  printf("num1:%d\n",num );
+ num ^= num >> 8;   printf("num2:%d\n",num );
+ num ^= num >> 4;   printf("num3:%d\n",num );
+ num ^= num >> 2;   printf("num4:%d\n",num );
+ num ^= num >> 1;   printf("num5:%d\n",num );
+
+ printf("num:%d\n",num );
+
+ return (num&1)?0:1;
+
+}
+
+
 
 int main() {
 
@@ -107,6 +123,8 @@ char comb[] = {'a','b','c'};
 print_powerset(comb);
 
 printf("set_bit_cnt:%d\n",set_bits(15) );
+
+printf("check even_bits:%d\n",even_bits(7) );
 
 
 }

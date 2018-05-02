@@ -26,7 +26,7 @@ struct Node* insert(struct Node *root, int num) {
 	} else if (num <= root->val) 
 	  root->left = insert(root->left,num);
 	  else root->right = insert(root->right,num);   
-
+   return root;
 }
 
 void inorder(struct Node * root) {

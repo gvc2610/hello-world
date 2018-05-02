@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//Note: Don't include mid in the regular search cases
+
 int binsrch(int *A, int l,int h, int val) {
 
 	int low = l, high = h, mid = 0;
@@ -11,14 +13,15 @@ int binsrch(int *A, int l,int h, int val) {
     while (low <= high ) {
     	mid = (low+high)/2;
 
-	if(val >= A[low] && val < A[mid]) 
+    if (val == A[mid]) return mid;    
+
+	else if(val < A[mid]) 
        high = mid-1;
 	
-	else if (val > A[mid] && val <= A[high])
+    else
        low = mid+1; 
-
-    else return mid;
-  }
+   }
+   return -1;
 }
 
 int first_binsrch(int *A, int n, int val) {
@@ -96,13 +99,13 @@ return -1;
 
 int main() {
 
-	int arr[] =  {0,1,2,3,4,5,6,7,8};
+	int arr[] =  {0,1,2,6,7,8};
 	register int cnt asm("eax");
 	printf("%d\n", cnt);
     int arr1[] = {0,1,2,2,2,5,6,7,8};
     int arr2[] = {2,2,2,2,2,2,2,2,2};
     int arr3[] = {4,5,6,7,8,0,1,2,3};
-// // 	printf("find 10:%d\n",binsrch(arr,9,10));
+ 	printf("find 10:%d\n",binsrch(arr,0,5,8));
 // // 	printf("find 0:%d\n",binsrch(arr,9,0));
    //  	printf("find %d\n",binsrch(arr,0,8,5));
 // // 	printf("find 4:%d\n",binsrch(arr,9,4));
