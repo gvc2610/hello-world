@@ -35,6 +35,26 @@ return num;
 
 }
 
+void i2a(int num, char A[]) {
+
+	int idx =0;
+	while(num) {
+		A[idx] = (num%10) + (int)'0';
+		num = num/10; idx++;
+	}
+
+   A[idx] = '\0';
+   int i= 0,j=strlen(A)-1;
+   char temp;
+   while(i!=j) {
+    temp = A[i];
+    A[i]=A[j];
+    A[j]=temp;
+    i++;j--;
+   }
+
+}
+
 unsigned int bit_reverse(unsigned int num) { 
 
   num = ((num & 0xaaaaaaaa) >> 1 ) | ((num & 0x55555555) << 1);
@@ -85,6 +105,9 @@ int even_bits(uint32_t num) {
 
 }
 
+uint32_t rightrotate(uint32_t n, int d) {
+	return ((n >> d)|(n<<(32-d)));
+}
 
 
 int main() {
@@ -126,5 +149,16 @@ printf("set_bit_cnt:%d\n",set_bits(15) );
 
 printf("check even_bits:%d\n",even_bits(7) );
 
+printf("char:%c\n",9 +(int)'0' );
+
+char A[10];
+i2a(123,A);
+printf("i2a:%s\n",A);
+
+char x = '5';
+char y = 2 + (int)'0';
+int z = x - (int)'0';
+printf("%c  %d  %c %d\n",x,x,y,z );
+printf("rightrotate:%x\n",rightrotate(0x7,3) );
 
 }

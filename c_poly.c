@@ -6,6 +6,8 @@ struct animal_vtable {
     //const int (*legs)();
 };
 
+//animal.c
+
 struct animal {   // class name
     struct animal_vtable methods; //methods
     const char* name; //state variables
@@ -14,7 +16,6 @@ struct animal {   // class name
 void describe(struct animal *a) {
     printf("%s makes \"%s\" sound.\n", a->name, a->methods.sound());
 }
-
 
 
 //cat.c

@@ -55,7 +55,33 @@ void * odd_thread2(void *args) {
     }
     pthread_exit(0);
 }
+ int g_i;
+void * even_thread3(void *args) {
+   //int i = 0;
+   while (g_i < 10) {
+      pthread_mutex_lock(&even_mutex);
+      sleep(random()%3);
+      printf("even:%d\n", g_i);
+      g_i+=1;
+      pthread_mutex_unlock(&odd_mutex);
+    }
+    pthread_exit(0);
+}
  
+void * odd_thread3(void *args) {
+    //int i = 1;
+    while (g_i < 10) {
+        pthread_mutex_lock(&odd_mutex);
+        sleep(random()%4);
+        printf("odd:%d\n", g_i);
+        g_i+=1;
+        pthread_mutex_unlock(&even_mutex);
+    }
+    pthread_exit(0);
+}
+ 
+
+
 int main() {
      pthread_t thread[2];
      sem_init(&even_lock, 0, 1);
@@ -77,6 +103,12 @@ int main() {
      pthread_join(thread[0], NULL);
      pthread_join(thread[1], NULL);
  
+     printf("Solution mutexes Resource:\n");
+     pthread_create(&thread[0], NULL, even_thread3, NULL);
+     pthread_create(&thread[1], NULL, odd_thread3, NULL);
+     pthread_join(thread[0], NULL);
+     pthread_join(thread[1], NULL);
+
  
      sem_destroy(&even_lock);
      sem_destroy(&odd_lock);

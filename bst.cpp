@@ -27,9 +27,9 @@ struct Node* insert(struct Node *root, int num) {
 		struct Node *temp = creatNode(num);
 		return temp;}
      if (num <= root->val)  
-	  root->left = insert(root->left,num);
+	  root->left =  insert(root->left,num);
 	 else root->right = insert(root->right,num);   
-   //return root;
+   return root;
 }
 
 void inorder(struct Node * root) {
@@ -81,6 +81,20 @@ int max_height(struct Node * root ) {
 	return (l_height >= r_height? l_height+1:r_height+1);
 }
 
+
+struct Node * mirror(struct Node * root) {
+	if(root == NULL) return NULL;
+
+	root->left = mirror(root->left);
+	root->right = mirror(root->right);
+
+	struct Node *temp = root->left;
+	       root->left = root->right;
+	       root->right = temp;
+
+	 return root;      
+}
+
 int main() {
 
 struct Node * root = NULL;
@@ -105,4 +119,15 @@ printf("%s\n","Level order traversal:" );
 level_order(root);
 
 printf("height: %d\n", max_height(root));
+
+mirror(root);
+
+printf("%s\n","Mirrored Inorder traversal:" );
+inorder(root);
+
+mirror(root);
+
+printf("%s\n","Mirrored-Mirror Inorder traversal:" );
+inorder(root);
+
 }

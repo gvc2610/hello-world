@@ -39,11 +39,11 @@ char val_a = 5;
 int *ptra = &val_a;
 char_dyna[0] = 'a';
 
-printf("char_ptr arr:%lu %p %p %p\n", sizeof(char_ptr1),char_ptr1,char_ptr1+1, &char_ptr1[0]);
+printf("char_ptr arr sizeof(char_ptr1):%lu char_ptr1:%p char_ptr1+1:%p &char_ptr1[0]:%p &char_ptr1:%p &char_ptr1+1:%p\n", sizeof(char_ptr1),char_ptr1,char_ptr1+1,&char_ptr1[0],&char_ptr1,(&char_ptr1)+1);
 
 
 // Dont dare to get the address of char_ptr. It is on the stack. So &char_ptr is of no use 
-printf("sizeof(char_str):%d  char_str:%p &char_str:%p &char_str[0]:%p char_str[0]:%c\n",sizeof(char_str),char_str, &char_str,&char_str[0],char_str[0]);
+printf("sizeof(char_str):%d  char_str:%p &char_str:%p &char_str+1:%p &char_str[0]:%p char_str[0]:%c\n",sizeof(char_str),char_str, &char_str,&char_str+1,&char_str[0],char_str[0]);
 
 printf("sizeof(char_dyna):%d char_dyna:%p &char_dyna:%p &char_dyna[0]:%p char_dyna[0]:%c\n",sizeof(char_dyna),char_dyna, &char_dyna,&char_dyna[0],char_dyna[0]);
 
@@ -96,7 +96,7 @@ char cnt = 0;
 // Think of A as a pointers to 1D As with each row having the address to the 1D A
 
 
-printf("sizeof(A):%d  A:%p &A:%p A+1:%p &A[1][0]:%p\n",sizeof(A),A,&A,A+1,&A[1][0]);
+printf("sizeof(A):%d  A:%p &A:%p &A+2:%p A+1:%p &A[1][0]:%p\n",sizeof(A),A,&A,&A+2,A+1,&A[1][0]);
 
 
 
@@ -136,6 +136,12 @@ printf("sizeof(A):%d  A:%p &A:%p A+1:%p &A[1][0]:%p\n",sizeof(A),A,&A,A+1,&A[1][
 	}
 //sizeof() doesnt work on dynamically allocated memory
 printf("sizeof(B):%d  B:%p *B:%p &B:%p B+1:%p &B[1][0]:%p\n",sizeof(B),B,*B,&B,B+1,&B[0][0]);
+
+
+int a = 5;
+int c;
+c = a==5?TRUE:FALSE;
+printf("c:%d\n",c );
 
 
 }

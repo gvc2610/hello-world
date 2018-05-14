@@ -224,6 +224,10 @@ int val2 = (int) *((char *) ptr1);
 
 printf("val2:%x\n",val2 );
 
+
+char *char_ptr_check;
+printf("char_ptr_check:%p  %d\n",sizeof(char_ptr_check), sizeof(*char_ptr_check));
+
 return 0;
 }
 
