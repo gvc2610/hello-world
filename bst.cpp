@@ -82,6 +82,32 @@ int max_height(struct Node * root ) {
 }
 
 
+int node_height(struct Node * root,int data,int level) {
+
+	if(root == NULL) return 0;
+	if(root->val == data) return level;
+
+	    int downlevel = node_height(root->left,data,level+1);
+	    if(downlevel!=0) return downlevel;
+
+		downlevel = node_height(root->right,data,level+1);
+		return downlevel;
+
+}
+
+
+int node_hd(struct Node *root, int data, int hd) {
+
+   if(root==NULL) return 0;
+   if(root->val == data) return hd;
+
+   int node_hd_val = node_hd(root->left,data,hd-1);
+       if(node_hd_val!=0) return node_hd_val;
+
+       node_hd_val = node_hd(root->right,data,hd+1);
+       return node_hd_val;
+}
+
 struct Node * mirror(struct Node * root) {
 	if(root == NULL) return NULL;
 
@@ -129,5 +155,9 @@ mirror(root);
 
 printf("%s\n","Mirrored-Mirror Inorder traversal:" );
 inorder(root);
+
+printf("Node height:%d\n",node_height(root,1,0) );
+
+printf("Node_hd: %d\n",node_hd(root,6,0) );
 
 }

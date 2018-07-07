@@ -12,17 +12,30 @@
 typedef struct
 { 
     char a[6];
+    char c;
     int b;
 } foo;
 
+struct check {
+int *ptr;
+int a;
+};
+
+
+void print_check(struct check chk) {
+	printf("inside: chk.a:%d   chk.ptr:%p   *chk.ptr:%d\n",chk.a,chk.ptr,*(chk.ptr));
+	*(chk.ptr) = 6;
+}
 
 foo f1 = {.a = "abc",.b = 5};
 void main()
 {
 	printf(" %d\n",sizeof(foo) );
+	printf("sizeof(foo.a) :%d\n",sizeof(f1.c) );
     printf( "%p %p\n",&f1, &f1+ 2 );
     printf( "%d\n", ((foo*)0) + 7 );
     printf( "%d\n", &(((foo*)0)->a[4]) );
+      printf( "%d\n", &(((foo*)0)->c) );
     printf( "%d\n", &(((foo*)0)->b) );
 
 
@@ -82,7 +95,16 @@ printf("%s\n",ptrf2[1].a );
     b.element1 = 0x11;
     printf("b.element3 = 0x%x\n", b.element3);
     printf("b.element1 = 0x%x\n", b.element1);
- 
+
+
+    int num = 5;
+    int *ptr_num = &num;
+    struct check struc = {.ptr = &num,.a =1};
+    
+    printf("%p   %d\n",ptr_num,*ptr_num );
+    print_check(struc);
+    printf("%p   %d  %d\n",ptr_num,*ptr_num, *(struc.ptr) );
+
 
 }
 

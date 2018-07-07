@@ -36,9 +36,36 @@ struct Node * traverse_end(struct Node * head_pointer, int reverse) {
 }
 
 
-void delete (int num) {
+void node_delete(int num) {
 
+ struct Node *temp = head;
+
+  if(temp->val==num) {
+  	head = temp->next;
+  	head->prev = NULL;
+  	free(temp);
+    printf("Deleting node pointed by head\n");
+  	return;
+  }
+
+  while(temp->next->val != num && temp->next != NULL) {
+  	    temp = temp->next;
+  }
 	
+	if(temp->next->val != num) {
+		printf("%s\n", "Num not found");
+		return;
+	} else {
+    	struct Node *temp1,*temp2;
+      	temp1 = temp->next->next;
+        temp2 = temp->next;
+    	temp->next = temp1;
+
+    	if(temp1 != NULL) // Only if its not last node
+    	temp1->prev= temp;
+
+    	free(temp2);
+    }
 }
 
 void insert(int num) {
@@ -73,4 +100,9 @@ int main() {
 	insert(5);
 	struct Node *last_node = traverse_end(head,0);
 	traverse_end(last_node,1);
+
+    node_delete(5);
+	last_node = traverse_end(head,0);
+	traverse_end(last_node,1);
+
 }

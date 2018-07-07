@@ -70,7 +70,32 @@ while(start_idx <= end_idx) {
     temp_counter++; start_idx++;
     }
 }
+
+unsigned reversebits(unsigned int num) {
  
+  num = ((num & 0x55555555)<<1) | ((num & 0xaaaaaaaa) >> 1);  // 0101 0101 0101 0101 0101 0101 0101 0101  :: 1010 1010
+  num = ((num & 0x33333333)<<2) | ((num & 0xcccccccc) >> 2);  // 0011 0011  :: 1100 1100
+  num = ((num & 0x0f0f0f0f)<<4) | ((num & 0xf0f0f0f0) >> 4);  // 
+  num = ((num & 0x00ff00ff)<<8) | ((num & 0xff00ff00) >> 8);
+  num = ((num & 0x0000ffff)<<16) | ((num & 0xffff0000) >> 16);
+
+return num;
+
+}
+/*
+int isBitPalindrome(unsigned int num) {
+
+  int cnt = 32; 
+   while(cnt > 0) {
+
+
+   }
+
+}
+*/
+
+
+
 int main()
 {
 	int32_t n;
@@ -94,6 +119,18 @@ int main()
 
     for(int i = 0; i < computeSetBits(&BitArray); i++)
     	printf("%d\n", BytesArray[i]);
+
+    //isBitPalindrome(0x16);
+
+
+    printf("rev:%x",reversebits(0xaaaaaaaa));
+
+
+    uint8_t bit8 = 0xaa;
+    uint8_t rot_bit8 = 0x55;
+    uint16_t bit16 = 0xaaaa;
+  
+    printf("%8x\n",bit8|bit16);
 
 	return 0;
 }

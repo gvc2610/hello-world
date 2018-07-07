@@ -228,6 +228,26 @@ printf("val2:%x\n",val2 );
 char *char_ptr_check;
 printf("char_ptr_check:%p  %d\n",sizeof(char_ptr_check), sizeof(*char_ptr_check));
 
+uint16_t unsign = -3;
+int16_t signd = unsign;
+
+printf("unsign:%d  signd:%d\n", unsign, signd );
+
+char arr1[] = "abc";
+char arr2[] = "defghi";
+
+arr1[1] = 'z';
+
+*arr1 = *arr2;
+
+
+printf("%s  %c\n",arr1,arr1[1] );
+
+int bool_check = 1;
+printf("bool_check:  %d  %d  %d\n",bool_check,!bool_check,~bool_check );
+
+printf("ptr:%p\n",NULL );
+
 return 0;
 }
 
