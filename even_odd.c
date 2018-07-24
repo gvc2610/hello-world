@@ -31,50 +31,32 @@ void * odd_thread(void *args) {
     pthread_exit(0);
 }
  
- 
-void * even_thread2(void *args) {
-   int i = 0;
-   while (i < 10) {
+ int g_j;
+void * even_thread4(void *args) {
+   //int i = 0;
+   while (g_j < 10) {
       pthread_mutex_lock(&even_mutex);
       //sleep(random()%3);
-      printf("even:%d\n", i);
-      i+=2;
+      printf("Even\n");
+      if(g_j%2 == 0) {
+      printf("even:%d\n", g_j);
+      g_j+=1;
+    }
       pthread_mutex_unlock(&odd_mutex);
     }
     pthread_exit(0);
 }
  
-void * odd_thread2(void *args) {
-    int i = 1;
-    while (i < 10) {
-        pthread_mutex_lock(&odd_mutex);
-        //sleep(random()%4);
-        printf("odd:%d\n", i);
-        i+=2;
-        pthread_mutex_unlock(&even_mutex);
-    }
-    pthread_exit(0);
-}
- int g_i;
-void * even_thread3(void *args) {
-   //int i = 0;
-   while (g_i < 10) {
-      pthread_mutex_lock(&even_mutex);
-      sleep(random()%3);
-      printf("even:%d\n", g_i);
-      g_i+=1;
-      pthread_mutex_unlock(&odd_mutex);
-    }
-    pthread_exit(0);
-}
- 
-void * odd_thread3(void *args) {
+void * odd_thread4(void *args) {
     //int i = 1;
-    while (g_i < 10) {
+    while (g_j < 10) {
         pthread_mutex_lock(&odd_mutex);
-        sleep(random()%4);
-        printf("odd:%d\n", g_i);
-        g_i+=1;
+        // sleep(random()%4);
+        printf("Odd\n");
+        if(g_j%2 !=0) {
+        printf("odd:%d\n", g_j);
+        g_j+=1;
+      }
         pthread_mutex_unlock(&even_mutex);
     }
     pthread_exit(0);
@@ -96,7 +78,8 @@ int main() {
  
      pthread_mutex_init(&even_mutex, NULL);
      pthread_mutex_init(&odd_mutex, NULL);
- 
+
+/* wrong mu should be acquired and released by same thread 
      printf("Solution mutexes:\n");
      pthread_create(&thread[0], NULL, even_thread2, NULL);
      pthread_create(&thread[1], NULL, odd_thread2, NULL);
@@ -109,7 +92,14 @@ int main() {
      pthread_join(thread[0], NULL);
      pthread_join(thread[1], NULL);
 
- 
+ */
+
+     printf("Solution mutexes :\n");
+     pthread_create(&thread[0], NULL, even_thread4, NULL);
+     pthread_create(&thread[1], NULL, odd_thread4, NULL);
+     pthread_join(thread[0], NULL);
+     pthread_join(thread[1], NULL);
+
      sem_destroy(&even_lock);
      sem_destroy(&odd_lock);
      pthread_mutex_destroy(&even_mutex);

@@ -101,8 +101,30 @@ void g() {
 	printf("Inside g : x:%d\n",val );
 }
 
+void func_void(void *p) {
+
+	//int a = *(int *)p;
+	  int a = (int *)p;
+	printf("check void:   p:%p a:%d  \n",p,a );
+}
+
+
+void fun_str(char *str) {
+	printf("strlen:%d\n",strlen(str) );
+    int len = 0,i=0;
+	while(str[i] != '\0') 
+		len++,i++;
+	printf("strlen1:%d\n", len);
+}
+
 int main() {
 
+char str1[] = "abcd";
+fun_str(str1);
+
+int check_void =  5;
+//func_void(&check_void);
+func_void((void*)1);
 
 printf("global val1:%d\n",val );
 f();
@@ -248,6 +270,40 @@ printf("bool_check:  %d  %d  %d\n",bool_check,!bool_check,~bool_check );
 
 printf("ptr:%p\n",NULL );
 
+
+char *x,*y;
+x = "abc";
+y=x;
+// /y[1] = 'd';
+
+unsigned char aa = 0xFF; //check if signed
+int b = (int)aa;
+char ch1 = 'a';
+
+printf("b:%d\n",b );
+
+#define size(var) \
+        ((size_t)(&(var)+1) - (size_t)(&(var)))
+
+// size of type without sizeof operator
+#define sizetype(type) \
+       ((size_t)(((type *)0) + 1)) 
+
+printf("size of int:%d  char:%d int:%d\n", size(b),size(ch1),sizetype(int));        
+
+#define EMPTY -1
+
+int A[10][5];
+memset(A, EMPTY, sizeof(A));
+printf("sizeof A:%d  A[1][1]:%d\n",sizeof(A),A[1][4] );
+
+
+int Arr[16];
+unsigned int a0 = (unsigned int) &Arr[0];
+unsigned int a3 = (unsigned int) &Arr[3];
+printf("p:%u\n", a3 - a0);
+printf("%u\n", &Arr[3] - &Arr[0]);
+
 return 0;
 }
 
@@ -356,6 +412,5 @@ a: asdfqwer
 b: skelrpfa
 common square: asfer
 common linear: asfer
-
 
 */

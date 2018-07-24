@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <stdint.h>
 
 /*typedef struct 
 {
@@ -105,17 +105,105 @@ printf("%s\n",ptrf2[1].a );
     print_check(struc);
     printf("%p   %d  %d\n",ptr_num,*ptr_num, *(struc.ptr) );
 
+    struct output {
+    uint8_t max;
+    uint8_t min;
+  // uint8_t padding[6];
+    uint64_t sum;
+};
+printf("sizeof output:%d\n",sizeof(struct output));
+
+struct output1 {
+    uint8_t max;
+   // uint8_t min;
+  // uint8_t padding[6];
+    uint64_t sum;
+};
+
+printf("sizeof output1:%d\n",sizeof(struct output1));
+
+struct output2 {
+    uint8_t max;
+    int min;
+  // uint8_t padding[6];
+    uint64_t sum;
+};
+
+printf("sizeof output2:%d\n",sizeof(struct output2));
+
+// structure A
+typedef struct structa_tag
+{
+char    c;
+short int  s;
+} structa_t;
+
+// structure B
+typedef struct structb_tag
+{
+short int  s;
+char    c;
+int     i;
+} structb_t;
+
+// structure C
+typedef struct structc_tag
+{
+char    c;
+double   d;
+int 	 s;
+} structc_t;
+
+// structure D
+typedef struct structd_tag
+{
+double   d;
+int 	 s;
+char    c;
+} structd_t;
+
+printf("sizeof(structa_t) = %d\n", sizeof(structa_t));
+printf("sizeof(structb_t) = %d\n", sizeof(structb_t));
+printf("sizeof(structc_t) = %d\n", sizeof(structc_t));
+printf("sizeof(structd_t) = %d\n", sizeof(structd_t));
+
+
+typedef struct structure1 
+{
+int id1;
+int id2;
+char name;
+char c;
+float percentage;
+} struc1;
+ 
+typedef struct structure2 
+{
+int id1;
+char name;
+int id2;
+char c;
+float percentage;
+} struc2;
+
+struc1 A1;
+struc2 B1;
+
+printf("size of structure1 in bytes : %d\n",sizeof(struc1));
+printf ( "\n   Address of id1        = %u", &A1.id1 );
+printf ( "\n   Address of id2        = %u", &A1.id2 );
+printf ( "\n   Address of name       = %u", &A1.name );
+printf ( "\n   Address of c          = %u", &A1.c );
+printf ( "\n   Address of percentage = %u", &A1.percentage );
+
+printf("\n\nsize of structure2 in bytes : %d\n",sizeof(struc2));
+printf ( "\n   Address of id1        = %u", &B1.id1 );
+printf ( "\n   Address of name       = %u", &B1.name );
+printf ( "\n   Address of id2        = %u", &B1.id2 );
+printf ( "\n   Address of c          = %u", &B1.c );
+printf ( "\n   Address of percentage = %u", &B1.percentage );
 
 }
-
-
-
-
-
-
-
-
-
 // int main() {
 
 // int a;

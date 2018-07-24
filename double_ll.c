@@ -91,6 +91,23 @@ struct Node *temp = (struct Node *)malloc(sizeof(struct Node));
 }
 
 
+void reverse() {
+	struct Node *left,*curr,*right;
+	left = NULL;
+	curr = head;
+
+	while(curr != NULL) {
+        right = curr->next;
+        
+        curr->next = left;
+        curr->prev = right;
+        
+        left = curr;
+        curr= right;
+
+	} head = left;
+}
+
 int main() {
 
 	insert(1);
@@ -101,7 +118,11 @@ int main() {
 	struct Node *last_node = traverse_end(head,0);
 	traverse_end(last_node,1);
 
-    node_delete(5);
+    //node_delete(5);
+	last_node = traverse_end(head,0);
+	traverse_end(last_node,1);
+	printf("Reverse\n" );
+	reverse();
 	last_node = traverse_end(head,0);
 	traverse_end(last_node,1);
 

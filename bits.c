@@ -71,7 +71,7 @@ while(start_idx <= end_idx) {
     }
 }
 
-unsigned reversebits(unsigned int num) {
+unsigned reversebits1(unsigned int num) {
  
   num = ((num & 0x55555555)<<1) | ((num & 0xaaaaaaaa) >> 1);  // 0101 0101 0101 0101 0101 0101 0101 0101  :: 1010 1010
   num = ((num & 0x33333333)<<2) | ((num & 0xcccccccc) >> 2);  // 0011 0011  :: 1100 1100
@@ -79,20 +79,58 @@ unsigned reversebits(unsigned int num) {
   num = ((num & 0x00ff00ff)<<8) | ((num & 0xff00ff00) >> 8);
   num = ((num & 0x0000ffff)<<16) | ((num & 0xffff0000) >> 16);
 
-return num;
 
+  return num;
+
+}
+unsigned reversebits(unsigned int v) {
+//unsigned int v; // 32-bit word to reverse bit order
+
+// swap odd and even bits
+v = ((v >> 1) & 0x55555555) | ((v & 0x55555555) << 1);
+// swap consecutive pairs
+v = ((v >> 2) & 0x33333333) | ((v & 0x33333333) << 2);
+// swap nibbles ... 
+v = ((v >> 4) & 0x0F0F0F0F) | ((v & 0x0F0F0F0F) << 4);
+// swap bytes
+v = ((v >> 8) & 0x00FF00FF) | ((v & 0x00FF00FF) << 8);
+// swap 2-byte long pairs
+v = ( v >> 16             ) | ( v               << 16);
+
+
+return v;
 }
 /*
+
+unsigned int s = sizeof(v) * CHAR_BIT; // bit size; must be power of 2 
+unsigned int mask = ~0;         
+while ((s >>= 1) > 0) 
+{
+  mask ^= (mask << s);
+  v = ((v >> s) & mask) | ((v << s) & ~mask);
+}
+
+*/
+
+
 int isBitPalindrome(unsigned int num) {
 
-  int cnt = 32; 
-   while(cnt > 0) {
-
-
+  //int cnt = sizeof(num)*CHAR_BIT;
+  int itr = 16; 
+  unsigned int mask_left = 0x10000000;
+  unsigned int mask_right = 0x00000001;
+   int cnt = 0;
+   while(itr) {
+      if((num&mask_left) == (num&mask_right)) 
+        cnt++;
+      
+      mask_left >> 1;
+      mask_right << 1;
+      itr--;
    }
-
+   return cnt==16?1:0;
+  
 }
-*/
 
 
 
@@ -120,7 +158,7 @@ int main()
     for(int i = 0; i < computeSetBits(&BitArray); i++)
     	printf("%d\n", BytesArray[i]);
 
-    //isBitPalindrome(0x16);
+    printf("palindrome:%d\n", isBitPalindrome(0x2f0ff0f4));
 
 
     printf("rev:%x",reversebits(0xaaaaaaaa));
