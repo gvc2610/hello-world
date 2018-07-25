@@ -6,7 +6,7 @@
 
 int main() {
 
-printf("check\n");
+printf("check size:%d\n",get_size());
 struct polygon *poly = malloc(get_size());
 int l =1, b=2, h=3;
 set_params(poly,1,2,3);
