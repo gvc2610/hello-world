@@ -203,6 +203,23 @@ printf ( "\n   Address of id2        = %u", &B1.id2 );
 printf ( "\n   Address of c          = %u", &B1.c );
 printf ( "\n   Address of percentage = %u", &B1.percentage );
 
+
+struct test1 {
+	int a;
+	char b;
+	int c;
+};
+
+struct  test2
+{
+	int a;
+	int b;
+	char c;
+	
+};
+
+printf("\nsize of test1:%d test2:%d\n",sizeof(struct test1),sizeof(struct test2) );
+
 }
 // int main() {
 

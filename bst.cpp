@@ -3,6 +3,9 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <limits.h>
+#include <stdint.h>
 
 using namespace std;
 
@@ -95,6 +98,16 @@ int node_height(struct Node * root,int data,int level) {
 
 }
 
+int node_height1(struct Node * root, int data ) {
+
+	if(root == NULL) return -1;
+	if(root->val == data) return 0;
+	    int l_height = node_height1(root->left,data);
+		int r_height = node_height1(root->right,data);
+
+	return (l_height !=-1 ? l_height+1:r_height!=-1? r_height+1:-1);
+}
+
 
 int node_hd(struct Node *root, int data, int hd) {
 
@@ -120,6 +133,41 @@ struct Node * mirror(struct Node * root) {
 
 	 return root;      
 }
+/*
+void print_level_order(struct Node *) {
+
+}
+*/
+
+
+struct Node * path(struct Node * root, queue<struct Node *> *q,int data) {
+
+
+  if(root == NULL) return NULL;
+
+  if(root->val == data) {
+  	q->push(root);
+  	return root;
+  }
+
+  if(data <= root->val) {
+  	q->push(root);
+  	root->left = path(root->left,q,data);
+  }
+  
+  if (data > root->val) {
+  	q->push(root);
+  	root->right = path(root->right,q,data);
+  } 
+
+  if(root->left==NULL && root->right == NULL) {
+  	q->pop();
+  } 
+ 
+ return root;
+
+}
+
 
 int main() {
 
@@ -133,6 +181,10 @@ root = insert(root,3);
 root = insert(root,6);
 root = insert(root,7);
 root = insert(root,5);
+root = insert(root,8);
+root = insert(root,100);
+root = insert(root,90);
+root = insert(root,80);
 printf("root_val:%d\n",root->val );
 //root = insert(root,8);
 printf("%s\n","Inorder traversal:" );
@@ -156,8 +208,20 @@ mirror(root);
 printf("%s\n","Mirrored-Mirror Inorder traversal:" );
 inorder(root);
 
-printf("Node height:%d\n",node_height(root,1,0) );
+printf("%s\n","Level order traversal:" );
+level_order(root);
 
+printf("Node height:%d\n",node_height(root,5,0) );
+printf("Node height1:%d\n",node_height1(root,5) );
 printf("Node_hd: %d\n",node_hd(root,6,0) );
+
+queue<struct Node *> q; 
+path(root,&q,80);
+printf("q.size():%d\n",q.size() );
+
+while(!q.empty()) {
+	printf("Queue pop: %d\n",(q.front())->val);
+	q.pop();
+}
 
 }

@@ -30,19 +30,20 @@ void * odd_thread(void *args) {
     }
     pthread_exit(0);
 }
- 
+
+
  int g_j;
 void * even_thread4(void *args) {
    //int i = 0;
    while (g_j < 10) {
       pthread_mutex_lock(&even_mutex);
       //sleep(random()%3);
-      printf("Even\n");
+    //  printf("Even\n");
       if(g_j%2 == 0) {
       printf("even:%d\n", g_j);
       g_j+=1;
     }
-      pthread_mutex_unlock(&odd_mutex);
+      pthread_mutex_unlock(&even_mutex);
     }
     pthread_exit(0);
 }
@@ -50,9 +51,9 @@ void * even_thread4(void *args) {
 void * odd_thread4(void *args) {
     //int i = 1;
     while (g_j < 10) {
-        pthread_mutex_lock(&odd_mutex);
+        pthread_mutex_lock(&even_mutex);
         // sleep(random()%4);
-        printf("Odd\n");
+       // printf("Odd\n");
         if(g_j%2 !=0) {
         printf("odd:%d\n", g_j);
         g_j+=1;
@@ -61,7 +62,6 @@ void * odd_thread4(void *args) {
     }
     pthread_exit(0);
 }
- 
 
 
 int main() {

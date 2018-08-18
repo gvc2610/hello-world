@@ -66,6 +66,11 @@ unsigned int bit_reverse(unsigned int num) {
   return num;
 }
 
+unsigned int bit_reverse1(unsigned int num) {
+
+
+}
+
 void print_powerset(char *str) {
 	int n = strlen(str);
 	printf("strlen: %d\n",n );
@@ -109,8 +114,65 @@ uint32_t rightrotate(uint32_t n, int d) {
 	return ((n >> d)|(n<<(32-d)));
 }
 
+// 1 1 2 3
+uint8_t fibo(int n) {
+
+	if(n==0) return 0;
+	if(n==1 || n==2) return 1;
+
+    uint8_t f0=1,f1=1,sum = 0;
+
+    n = n-2;
+    while(n){
+        //check for overflow  f1 < UCHAR_MAX - f0
+        if(f1 < UCHAR_MAX-f0 && f0 < UCHAR_MAX) {
+        sum = f0+f1;
+        f0  = f1;
+        f1  = sum;
+        --n;
+       } else return 255;
+    } 
+
+    return sum;
+
+
+} 
+
+int max_sum_subarray(int A[], int n) {
+	
+    if(n==1) return A[0];
+    if(n==0) return -1;
+
+	int max_sum=A[0],sum_so_far=A[0],s = 0,end=0,start = 0;
+
+    for(int i=1;i<n;i++) {
+          
+          sum_so_far = sum_so_far+A[i];
+
+    	if(sum_so_far > max_sum) {
+    		max_sum = sum_so_far;
+    		end = i;
+    		start = s;
+    	} 
+    	
+    	if(sum_so_far < 0) {
+          sum_so_far = 0;
+          s = i+1;
+    	}
+   }
+
+    printf("n:%d start:%d end:%d\n",n,start,end);
+
+    return max_sum;
+}
+
 
 int main() {
+
+int a[] = {-2, -3, 4, -1, -2, 1, 5, -3};
+    int n = sizeof(a)/sizeof(a[0]);
+
+printf("max_sum_subarray:%d\n",max_sum_subarray(a,n) );
 
 char *ch_arr = "34";
 char arr[] = "99";
@@ -160,5 +222,22 @@ char y = 2 + (int)'0';
 int z = x - (int)'0';
 printf("%c  %d  %c %d\n",x,x,y,z );
 printf("rightrotate:%x\n",rightrotate(0x7,3) );
+
+i = 0;
+printf("i:%d\n", i==0 ?0: i==1 ? 1: i==2? 2:-1);
+
+i = -1;
+printf("i:%d\n", i==0 ?0: i==1 ? 1: i==2? 2:-1);
+
+
+i = 1;
+printf("i:%d\n", i==0 ?0: i==1 ? 1: i==2? 2:-1);
+
+i = 2;
+printf("i:%d\n", i==0 ?0: i==1 ? 1: i==2? 2:-1);
+
+for(int i=0;i<20;i++){
+	printf("%d\n",fibo(i) );
+}
 
 }

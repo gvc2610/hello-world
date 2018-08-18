@@ -5,7 +5,15 @@ int N = 5;
 int front = -1;
 int rear = -1;
 
+/*
+Queue
+-------------------------
+front->1->2->3-4...->rear 
+-------------------------
+Array indices:
+0 1 2 3 4 5 ...
 
+*/
 int isFull() {
 	if ((rear + 1 + N)%N == front)
         return 1;
@@ -53,8 +61,9 @@ int deQueue() {
        	}
 
     else {
+    	int temp1 = front; 
     	front = (front+1+N)%N;
-    	return Q[front]; 
+    	return Q[temp1]; 
     }
 
 }
@@ -68,18 +77,19 @@ enQueue(100);
 enQueue(200);
 enQueue(300);
 enQueue(400);
+printf("front:%d rear:%d\n",front,rear );
 enQueue(500);
 printQ();
 
 enQueue(600);
 
-deQueue();
-deQueue();
-deQueue();
+printf("deQueue():%d\n",deQueue());
+printf("deQueue():%d\n",deQueue());
+printf("deQueue():%d\n",deQueue());
 
 printQ();
 printf("front:%d rear:%d\n",front,rear );
-deQueue();
+printf("deQueue():%d\n",deQueue());
 
 printQ();
 

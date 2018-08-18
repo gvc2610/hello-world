@@ -28,6 +28,42 @@ void traverese_Bottom2Top(int A[R][C], int bottom,int top,int negCol) {
 	}
 }
 
+void transpose(int A[R][C]) {
+
+	int c1=0,temp;
+
+	for(int i = 0; i < R; i++) {
+		for(int j = c1; j < C; j++) {
+           temp = A[i][j];
+           A[i][j] = A[j][i];
+           A[j][i] = temp;         
+		} c1++;
+	}
+}
+
+void reverse_row(int A[R][C]) {
+int left = 0, right = C-1, temp;
+
+	for(int i = 0; i< R; i++) {
+		while(left <= right){
+		   temp = A[i][left];
+           A[i][left] = A[i][right];
+           A[i][right] = temp;
+           left++,right--;
+		}left = 0, right = C-1;
+	}
+}
+
+void print_matrix(int A[R][C]) {
+
+		for (int i = 0; i < R; i++)
+	{
+		for (int j = 0; j < C; j++)
+		{
+			printf("%3d ", A[i][j]);
+		} printf("\n");
+	}
+}
 
 int main() {
 
@@ -64,13 +100,13 @@ int posRow = 0, posCol = C-1, negRow = R-1, negCol = 0;
 
 	}
 
+print_matrix(A);
 
-	for (int i = 0; i < R; i++)
-	{
-		for (int j = 0; j < C; j++)
-		{
-			printf("%3d ", A[i][j]);
-		} printf("\n");
-	}
+transpose(A);
+printf("Transposed Matrix:\n\n\n");
+print_matrix(A);
 
+reverse_row(A);
+printf("Row reversed Matrix:\n\n\n");
+print_matrix(A);
 }

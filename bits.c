@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
  
 // uint32_t msb32(uint32_t n)
 // {
@@ -46,6 +47,61 @@ int msb16_idx(uint16_t n)
 	return b;
 }
 
+int findComplement1(int num) {
+    
+    if(num == 0) return 1;
+    if(num == 1) return 0;
+    
+    int num_com = 0;
+    int msb_loc = -1;
+    int temp = num;
+    while(temp) {
+        temp = temp>>1;
+        msb_loc++;
+    }
+    
+    int mask = 1 << msb_loc;
+    //printf("%d",msb_loc);
+    
+    while(mask) {
+    num_com = (num & mask) ? (num_com):(num_com|0x1);
+        //printf("num:%d num_com:%d mask:%d num & mask:%d\n",num,num_com,mask,((num & mask))?1:0);
+        //msb_loc--;
+        mask = mask>>1;
+
+        if(mask) num_com = num_com <<1;
+
+    }
+    //printf("num_com:%d",num_com);
+    return num_com;
+}
+
+int findComplement(int num) {
+    long i;
+    for(i=1;i<=num;i*=2)
+        num^=i;
+    return num;
+}
+
+bool isPowerOfFour1(int num) {
+
+    if(num<0) return false;
+    int loc =-1;
+        
+    if(((num)&(num-1))==0) {
+       while(num) {
+       num=num>>1;loc++;}    
+      } else return false;
+    
+    printf("\nloc:%d\n",loc);
+    return loc%2==0?true:false;   
+}
+
+bool isPowerOfFour(int num) {
+    if( (num&(num-1))==0 && (num&0x55555555)!=0 ) return true;
+    else
+        return false;
+}
  
 //#define lsb32(n) ( (uint32_t)(n) & -(int32_t)(n) )
 
@@ -112,27 +168,42 @@ while ((s >>= 1) > 0)
 
 */
 
-
+/*
 int isBitPalindrome(unsigned int num) {
 
   //int cnt = sizeof(num)*CHAR_BIT;
   int itr = 16; 
-  unsigned int mask_left = 0x10000000;
+  unsigned int mask_left = 0x80000000;
   unsigned int mask_right = 0x00000001;
    int cnt = 0;
    while(itr) {
-      if((num&mask_left) == (num&mask_right)) 
+    printf("cnt:%d num:%x,num&mask_left:%x  num&mask_right:%x\n", cnt,num,(num&mask_left),(num&mask_right));
+      if((num&mask_left) && (num&mask_right>0)) 
         cnt++;
       
-      mask_left >> 1;
-      mask_right << 1;
+      mask_left=mask_left >> 1;
+      mask_right=mask_right << 1;
       itr--;
    }
    return cnt==16?1:0;
   
 }
+*/
 
+int isBitPalindrome(unsigned int num) {
 
+int left = sizeof(num)*8-1, right = 0, cnt = 0;
+printf("size:%d\n",sizeof(num) );
+
+  while(left>right){
+       if(((num & (0x1 << left)) >> left) == ((num & (0x1 << right)) >> right))  {
+           cnt++;
+          // printf("cnt:%d\n", cnt);
+       } 
+        left--;right++;
+    }
+    return cnt==(sizeof(num)*4)?1:0;
+}
 
 int main()
 {
@@ -159,6 +230,7 @@ int main()
     	printf("%d\n", BytesArray[i]);
 
     printf("palindrome:%d\n", isBitPalindrome(0x2f0ff0f4));
+    printf("palindrome:%d\n", isBitPalindrome(0x0f0ff000));
 
 
     printf("rev:%x",reversebits(0xaaaaaaaa));
@@ -169,6 +241,20 @@ int main()
     uint16_t bit16 = 0xaaaa;
   
     printf("%8x\n",bit8|bit16);
+
+
+
+     uint32_t int32 = 0xffffffff;
+
+    printf("int32:%d\n",int32 & 0xf );
+
+    printf("x1:%x\n",0x123 & ((0x1<<9)-1));
+    printf("x2:%x\n",0x123 & ((0x1<<8)-1));
+
+    printf("%x\n",findComplement(5) );
+    printf("%d\n",isPowerOfFour(16) );
+    int num = 0xA;
+    printf("n1:%d  n2:%d\n",(num & (0x1 << 1)) >> 1,(num & (0x1<<3)) >> 3 );
 
 	return 0;
 }
