@@ -168,6 +168,30 @@ struct Node * path(struct Node * root, queue<struct Node *> *q,int data) {
 
 }
 
+void print_stack(std::stack<int> stack) {
+
+for (std::stack<int> dump = stack; !dump.empty(); dump.pop())
+std::cout << dump.top() << '\n';
+
+std::cout << "(" << stack.size() << " elements)\n";
+}
+
+std::stack<int> bst_stack;
+
+struct Node * print_paths(struct Node *root) {
+
+	if(root == NULL) return NULL;
+
+	bst_stack.push(root->val);
+	root->left = print_paths(root->left);
+	root->right = print_paths(root->right);
+
+	if(root->left == NULL && root->right == NULL) 
+		print_stack(bst_stack);
+	bst_stack.pop();
+
+	return root;
+}
 
 int main() {
 
@@ -223,5 +247,16 @@ while(!q.empty()) {
 	printf("Queue pop: %d\n",(q.front())->val);
 	q.pop();
 }
+/*
+std::stack<int> stack;
+    stack.push(1); 
+    stack.push(3); 
+    stack.push(7); 
+    stack.push(19);
+    stack.push(20); 
+
+print_stack(stack);
+*/
+print_paths(root);
 
 }

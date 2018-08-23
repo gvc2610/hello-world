@@ -167,6 +167,32 @@ int max_sum_subarray(int A[], int n) {
 }
 
 
+int max_diff_subarray(int A[], int n) {
+
+  int max_diff = 0, min_so_far = A[0];
+   
+  int left = 0, right = 0; 
+
+   
+  for(int i = 0; i < n; i++) {
+      
+      if(min_so_far > A[i]) { 
+      	 min_so_far = A[i];
+         left = i;
+      	}
+
+      if((A[i]-min_so_far) > max_diff) {
+      	max_diff = A[i] - min_so_far;
+      	right = i;
+      }
+  }
+ 
+ printf("max_diff_subarray: left:%d  right:%d,\n",left,right );
+ return max_diff;
+
+}
+
+
 int main() {
 
 int a[] = {-2, -3, 4, -1, -2, 1, 5, -3};
@@ -239,5 +265,10 @@ printf("i:%d\n", i==0 ?0: i==1 ? 1: i==2? 2:-1);
 for(int i=0;i<20;i++){
 	printf("%d\n",fibo(i) );
 }
+
+
+int arr1[]  = {1,5,10,-2,12,8};//{80,2,6,3,100};
+
+printf("max difference %d:\n",max_diff_subarray(arr1,sizeof(arr1)/sizeof(int)));
 
 }

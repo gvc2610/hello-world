@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int R = 20, C = 20, cnt = 1;
+int R = 15, C = 1, cnt = 1;
 
 void print_row(int A[R][C], int row_id, int sum) {
     

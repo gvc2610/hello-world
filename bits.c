@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <math.h>
  
 // uint32_t msb32(uint32_t n)
 // {
@@ -193,7 +195,7 @@ int isBitPalindrome(unsigned int num) {
 int isBitPalindrome(unsigned int num) {
 
 int left = sizeof(num)*8-1, right = 0, cnt = 0;
-printf("size:%d\n",sizeof(num) );
+printf("size:%lu\n",sizeof(num) );
 
   while(left>right){
        if(((num & (0x1 << left)) >> left) == ((num & (0x1 << right)) >> right))  {
@@ -203,6 +205,42 @@ printf("size:%d\n",sizeof(num) );
         left--;right++;
     }
     return cnt==(sizeof(num)*4)?1:0;
+}
+
+int * gray_codes(int num,int *num_codes) {
+
+   int code_cnt =  pow(2,num);
+   *num_codes = code_cnt;
+
+   printf("num_codes:%d\n",*num_codes );
+
+   int *gray_array = (int*)malloc(sizeof(int)*code_cnt);
+
+   int curr_cnt;
+
+   if(num == 0) {
+    gray_array[0] = 0;
+    return gray_array;
+   }
+
+   for(int i = 1; i <= num; i++) {
+      
+       if(i == 1) {
+        gray_array[0] = 0;
+        gray_array[1] = 1;
+        continue;
+       }
+
+      curr_cnt = pow(2,i);
+
+      for(int j = curr_cnt/2,k = ((curr_cnt/2)-1); j < curr_cnt && k >=0; j++,k--) {
+          gray_array[j] = gray_array[k];
+          gray_array[j] = gray_array[j] | 1 << (i-1);
+      }
+      
+   }
+return gray_array;
+
 }
 
 int main()
@@ -255,6 +293,14 @@ int main()
     printf("%d\n",isPowerOfFour(16) );
     int num = 0xA;
     printf("n1:%d  n2:%d\n",(num & (0x1 << 1)) >> 1,(num & (0x1<<3)) >> 3 );
+
+     int num_codes = 0;
+    int *gray = gray_codes(5,&num_codes);
+
+    for(int i = 0; i< num_codes; i++) {
+      printf("gray code: %d\n",gray[i] );
+    }
+    free(gray);
 
 	return 0;
 }
