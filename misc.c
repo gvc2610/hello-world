@@ -4,6 +4,7 @@
 #include <math.h>
 #include <limits.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 int a2i(char A[]) {
 
@@ -192,6 +193,40 @@ int max_diff_subarray(int A[], int n) {
 
 }
 
+char arr[255];
+
+
+bool isAnagram(char* s, char* t) {
+    
+    int len1 = strlen(s);
+    int len2 = strlen(t);
+    
+    if(len1 != len2) return false;
+    
+    memset(arr,0,255);
+    
+    int idx1=0,idx2=0;
+    
+    while(idx1 < len1) {
+        printf("Before idx1:%d arr[(int)t[idx1]]:%d\n",idx1,arr[(int)t[idx1]]);
+        arr[(int)s[idx1]]++;
+        idx1++;
+        printf("After idx1:%d arr[(int)t[idx1]]:%d\n",idx1,arr[(int)t[idx1]]);
+    }
+    
+    while(idx2<len2) {
+         printf("idx2:%d arr[(int)t[idx2]]:%d\n",idx2,arr[(int)t[idx2]]);
+        if(arr[(int)t[idx2]] <= 0) 
+            return false;
+        
+        arr[(int)t[idx2]]--;
+        idx2++;       
+    }
+    
+    return true;
+    
+}
+
 
 int main() {
 
@@ -270,5 +305,12 @@ for(int i=0;i<20;i++){
 int arr1[]  = {1,5,10,-2,12,8};//{80,2,6,3,100};
 
 printf("max difference %d:\n",max_diff_subarray(arr1,sizeof(arr1)/sizeof(int)));
+
+char str1[] = "aabbbb",str2[] = "aaaabb";
+
+
+printf("isAnagram:%d\n",isAnagram(str1,str2) );
+int size[3];
+printf("%d",sizeof(size));
 
 }

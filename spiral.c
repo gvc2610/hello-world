@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 int cnt = 1;
-int R = 4,C = 4;
+int R = 10,C = 10;
 
 void traverese_Left2Right(int A[R][C], int left,int right, int posRow) {
    for(int i = left; i <= right; i++) {
@@ -65,6 +66,7 @@ void print_matrix(int A[R][C]) {
 	}
 }
 
+
 int main() {
 
 int A[R][C];
@@ -101,7 +103,6 @@ int posRow = 0, posCol = C-1, negRow = R-1, negCol = 0;
 	}
 
 print_matrix(A);
-
 transpose(A);
 printf("Transposed Matrix:\n\n\n");
 print_matrix(A);
@@ -109,4 +110,5 @@ print_matrix(A);
 reverse_row(A);
 printf("Row reversed Matrix:\n\n\n");
 print_matrix(A);
+
 }

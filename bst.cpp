@@ -74,6 +74,48 @@ void level_order(struct Node *root) {
 
  }
 
+void print_queue(queue<Node *> q)
+{
+  while (!q.empty())
+  {
+    cout << q.front()->val << " ";
+    q.pop();
+  }
+  std::cout << std::endl;
+}
+//side : 0 left , side : 1 right
+void side_view(struct Node * root, int side)  {
+
+	if(root == NULL) return;
+	queue<Node *> Q;
+	Q.push(root); int cnt = Q.size(); 
+   Node * temp = NULL; int left_idx = cnt;
+
+	while(!Q.empty()) {
+
+		  while(cnt){
+		  	temp = 	Q.front(); Q.pop();
+		  	
+		  	if(side == 0 &&cnt == left_idx) {
+		  		printf("left side %d :",temp->val );
+		  	}
+
+		  	printf("%d ",temp->val );
+			if(temp->left!= NULL) Q.push(temp->left);
+			if(temp->right!=NULL) Q.push(temp->right);
+
+		  	if(side == 1 &&cnt == 1) {
+		  		printf("right side %d :",temp->val );
+		  	}
+
+			cnt--;
+		} printf("\n",Q.size());
+		// print_queue(Q);
+
+		cnt = Q.size();
+		left_idx = cnt;
+	}
+}
 
 int max_height(struct Node * root ) {
 
@@ -219,6 +261,12 @@ preorder(root);
 
 printf("%s\n","Level order traversal:" );
 level_order(root);
+
+printf("%s\n","left side view :" );
+side_view(root,0);
+
+printf("%s\n","right side view :" );
+side_view(root,1);
 
 printf("height: %d\n", max_height(root));
 
