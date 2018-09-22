@@ -28,14 +28,35 @@ void print_check(struct check chk) {
 }
 
 foo f1 = {.a = "abc",.b = 5};
+
+struct test {
+	int test_val;
+};
+
+void test_fun(struct test *val) {
+struct test *val1 = val;
+	val1->test_val = 2;
+}
+
 void main()
 {
+	
+
+   struct test *test_struc, test_struc1;
+    test_struc1.test_val = 1;
+   test_struc = &test_struc1;
+   
+
+   test_fun(test_struc);
+   
+   printf("test_struc->val:%d\n",test_struc->test_val );
+
 	printf(" %d\n",sizeof(foo) );
 	printf("sizeof(foo.a) :%d\n",sizeof(f1.c) );
     printf( "%p %p\n",&f1, &f1+ 2 );
     printf( "%d\n", ((foo*)0) + 7 );
     printf( "%d\n", &(((foo*)0)->a[4]) );
-      printf( "%d\n", &(((foo*)0)->c) );
+    printf( "%d\n", &(((foo*)0)->c) );
     printf( "%d\n", &(((foo*)0)->b) );
 
 

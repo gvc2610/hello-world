@@ -227,8 +227,52 @@ bool isAnagram(char* s, char* t) {
     
 }
 
+#define GET_CHAIN_NUM(x) (x)==0x1?0:(x)==0x2?1:(x)==0x4?2:(x)==0x8?3:GET_CHAIN_NUM_EXT(x)
+#define GET_CHAIN_NUM_EXT(x)  (x)==0x10?0:(x)==0x20?1:(x)==0x40?2:(x)==0x80?3:4
+
+
+int comparator(void * p, void *q) {
+	int a = *(int *)p;
+	int b = *(int *)q;
+	return a-b;
+}
+
+int solution(int A[], int N) {
+    // write your code in C99 (gcc 6.2.0)
+    
+    qsort(A,N,sizeof(A[0]),comparator);
+   // int temp = A[0];
+    int idx = 0;
+    
+    while(A[idx] <= 0 && idx < N )
+       idx++;
+       
+    printf("idx:%d\n",idx);   
+
+    if(idx == N) return 1;
+    
+    if(A[idx] > 1  ) return 1;
+    for(int i = 0; i < N; i++) {
+        printf("A[%d]:%d\n",i,A[i]);
+    }
+    while(idx < N-1) {
+        if((A[idx+1] - A[idx]) == 0 || (A[idx+1] - A[idx]) == 1)
+        {idx++; printf("idx1:%d\n", idx);}
+        else {  
+            printf("idx2:%d\n", idx);
+            return A[idx] + 1;
+            
+        }
+    }
+    return A[idx] + 1;
+
+} 
+
 
 int main() {
+
+ printf("GET_CHAIN_NUM:%d %d %d %d\n",GET_CHAIN_NUM(1),GET_CHAIN_NUM(2),GET_CHAIN_NUM(4),GET_CHAIN_NUM(8));
+ printf("GET_CHAIN_NUM_EXT:%d %d %d %d\n",GET_CHAIN_NUM(16),GET_CHAIN_NUM(32),GET_CHAIN_NUM(64),GET_CHAIN_NUM(128));
 
 int a[] = {-2, -3, 4, -1, -2, 1, 5, -3};
     int n = sizeof(a)/sizeof(a[0]);
@@ -311,6 +355,56 @@ char str1[] = "aabbbb",str2[] = "aaaabb";
 
 printf("isAnagram:%d\n",isAnagram(str1,str2) );
 int size[3];
-printf("%d",sizeof(size));
+printf("%d\n",sizeof(size));
+
+
+int Array[2][3] = {{1,2,3},{4,5,6}};
+
+for(int i= 0; i < 2; i++) 
+	for(int j=0; j<3; j++) {
+		printf("Array: %d\n",Array[i][j] );
+	}
+
+	memset((void*)&Array[0][0],0,sizeof(Array)); 
+
+	for(int i= 0; i < 2; i++) 
+	for(int j=0; j<3; j++) {
+		printf("Array: %d\n",Array[i][j] );
+	}
+
+
+   int Arr[] = {-1,0,3,1,2,1,1,5,8,9,3};
+
+  qsort(Arr,10,sizeof(Arr[0]),comparator); 
+
+  for(int i = 0; i < 10; i++) {
+  	printf("Arr[%d]%d\n",i,Arr[i] );
+  }
+
+  printf("sol:%d\n",solution(Arr,10));
+
+
+  struct StrucArr {
+  	int a;
+  	int b;
+  };
+
+  struct StrucArr SA[3][4];
+
+  for(int i =0;i<3;i++)
+  	for(int j=0;j<4;j++) {
+  		SA[i][j].a = 1; 
+        SA[i][j].b = 2;
+  	}
+
+memset((void *)&SA[1][2],0,sizeof(SA[0][0]));
+
+  for(int i =0;i<3;i++)
+  	for(int j=0;j<4;j++)
+  	printf("SA[%d][%d]:%d  %d\n",i,j,SA[i][j].a,SA[i][j].b);
+
+  int hex = 0x08;
+  hex >>= 1;
+  printf("hex:%x\n", hex);
 
 }

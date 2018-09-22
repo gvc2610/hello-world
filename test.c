@@ -117,6 +117,18 @@ void fun_str(char *str) {
 	printf("strlen1:%d\n", len);
 }
 
+void print_arr(int n) {
+ 
+ int array1[n];
+ for(int i =0;i<n;i++) {
+ 	array1[i] = i;
+ }
+
+ for(int i= 0;i<n;i++) {
+ 	printf("arr:%d\n",array1[i] );
+ }
+}
+
 int main() {
 
 char str1[] = "abcd";
@@ -303,6 +315,14 @@ unsigned int a0 = (unsigned int) &Arr[0];
 unsigned int a3 = (unsigned int) &Arr[3];
 printf("p:%u\n", a3 - a0);
 printf("%u\n", &Arr[3] - &Arr[0]);
+
+
+int input;
+printf("Input num\n");
+scanf("%d",&input);
+
+int arr_check[input];
+print_arr(input);
 
 return 0;
 }

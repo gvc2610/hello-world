@@ -226,7 +226,7 @@ int * gray_codes(int num,int *num_codes) {
    for(int i = 1; i <= num; i++) {
       
        if(i == 1) {
-        gray_array[0] = 0;
+        gray_array[0] = 0; 
         gray_array[1] = 1;
         continue;
        }
@@ -282,7 +282,7 @@ int main()
 
 
 
-     uint32_t int32 = 0xffffffff;
+    uint32_t int32 = 0xffffffff;
 
     printf("int32:%d\n",int32 & 0xf );
 
@@ -295,7 +295,7 @@ int main()
     printf("n1:%d  n2:%d\n",(num & (0x1 << 1)) >> 1,(num & (0x1<<3)) >> 3 );
 
      int num_codes = 0;
-    int *gray = gray_codes(5,&num_codes);
+    int *gray = gray_codes(10,&num_codes);
 
     for(int i = 0; i< num_codes; i++) {
       printf("gray code: %d\n",gray[i] );

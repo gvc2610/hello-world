@@ -138,10 +138,12 @@ printf("sizeof(A):%d  A:%p &A:%p &A+2:%p A+1:%p &A[1][0]:%p\n",sizeof(A),A,&A,&A
 printf("sizeof(B):%d  B:%p *B:%p &B:%p B+1:%p &B[1][0]:%p\n",sizeof(B),B,*B,&B,B+1,&B[0][0]);
 
 
-int a = 5;
-int c;
-c = a==5?TRUE:FALSE;
-printf("c:%d\n",c );
+//int *ptr;
+int arr[5] = {0,1,2,3,4};
+
+unsigned long int addr = arr + 3;
+printf("%u %u %u %u\n",arr,(arr+3),arr+3,addr );
+
 
 
 }
