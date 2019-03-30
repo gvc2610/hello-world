@@ -74,6 +74,90 @@ void level_order(struct Node *root) {
 
  }
 
+
+ void printLevelOrder(Node *root)  
+{  
+    // Base Case  
+    if (root == NULL) return;  
+  
+    // Create an empty queue for level order tarversal  
+    queue<Node *> q;
+    vector <vector<int> > buff;   
+  
+    // Enqueue Root and initialize height  
+    q.push(root);  
+  
+    while (q.empty() == false)  
+    {  
+        // nodeCount (queue size) indicates number 
+        // of nodes at current lelvel.  
+        int node_cnt = q.size();  
+        vector<int> vect;
+  
+        // Dequeue all nodes of current level and  
+        // Enqueue all nodes of next level  
+        while (node_cnt > 0) 
+        {    
+            Node *node = q.front();  
+            vect.push_back(node->val);
+
+           // cout << node->val << " ";  
+            q.pop();  
+            if (node->left != NULL)  
+                q.push(node->left);  
+            if (node->right != NULL)  
+                q.push(node->right);  
+            node_cnt--;  
+        }  
+        buff.push_back(vect);
+        cout << endl;  
+    }  
+
+for(int i = 0; i< buff.size(); i++) {
+	for(int j=0; j<buff[i].size(); j++) {
+		printf("level:%d  ",buff[i][j]);
+	}
+	printf("\n");
+  }
+
+}  
+
+void zigzag(struct Node *root) {
+	 
+	if(!root) return; 
+
+	stack<Node *>s1,s2;
+	s1.push(root);
+  
+    while(!s1.empty() || !s2.empty()) {
+      struct Node * p;
+    	while(!s1.empty()) {
+    		p = s1.top();
+    		s1.pop();
+    		
+    		printf("zigzagL2R:%d\n",p->val);
+
+    		if(p->left) s2.push(p->left);
+    		if(p->right) s2.push(p->right);
+    	}
+
+	while(!s2.empty()) {
+    		p = s2.top();
+    	    s2.pop();
+
+    		printf("zigzagR2L:%d\n",p->val);
+
+    		if(p->right) s1.push(p->right);
+    		if(p->left) s1.push(p->left);
+	    	}    	
+	    }
+}
+
+
+
+
+
+
 void print_queue(queue<Node *> q)
 {
   while (!q.empty())
@@ -163,6 +247,16 @@ int node_hd(struct Node *root, int data, int hd) {
        return node_hd_val;
 }
 
+int node_hd1(struct Node *root, int data, int hd) {
+
+   if(root==NULL) return 0;
+   if(root->val == data) return hd;
+
+   node_hd(root->left,data,hd-1);
+   node_hd(root->right,data,hd+1);
+
+}
+
 struct Node * mirror(struct Node * root) {
 	if(root == NULL) return NULL;
 
@@ -182,31 +276,23 @@ void print_level_order(struct Node *) {
 */
 
 
-struct Node * path(struct Node * root, queue<struct Node *> *q,int data) {
+bool path(struct Node * root, queue<struct Node *> *q,int data) {
 
 
-  if(root == NULL) return NULL;
-
-  if(root->val == data) {
-  	q->push(root);
-  	return root;
-  }
-
-  if(data <= root->val) {
-  	q->push(root);
-  	root->left = path(root->left,q,data);
-  }
+  if(root == NULL) 
+  	return false;
   
-  if (data > root->val) {
-  	q->push(root);
-  	root->right = path(root->right,q,data);
-  } 
+  q->push(root);
+  
+  if(root->val == data)
+  	return true;
 
-  if(root->left==NULL && root->right == NULL) {
+  if(path(root->left,q,data) || path(root->right,q,data)) 
+  	 return true;
+  
   	q->pop();
-  } 
  
- return root;
+ return false;
 
 }
 
@@ -233,6 +319,162 @@ struct Node * print_paths(struct Node *root) {
 	bst_stack.pop();
 
 	return root;
+}
+
+
+struct Node* minValue(struct Node *root) {
+    if(root== NULL) return 0;
+	while(root->left) {
+		root = root->left;
+	}
+	return root;
+}
+
+struct Node * inOrderSuccessor(struct Node *root, struct Node *n) 
+{ 
+    // step 1 of the above algorithm 
+    if( n->right != NULL ) 
+        return minValue(n->right); 
+  
+    struct Node *succ = NULL; 
+  
+    // Start from root and search for successor down the tree 
+    while (root != NULL) 
+    { 
+        if (n->val < root->val) 
+        { 
+            succ = root; 
+            root = root->left; 
+        } 
+        else if (n->val > root->val) 
+            root = root->right; 
+        else
+           break; 
+    } 
+  
+    return succ; 
+} 
+
+
+int CountNodes(Node *tree)
+{
+    int c =  1;             //Node itself should be counted
+    if (tree ==NULL)
+        return 0;
+    else
+    {
+        c += CountNodes(tree->left);
+        c += CountNodes(tree->right);
+        return c;
+    }
+}
+
+
+
+int idx = 0;
+void serialize_preorder(struct Node *root, int * data, int node_cnt) {
+    
+    if(!root) return;
+    if(idx > node_cnt) return; 
+    
+    data[idx] = root->val; 
+
+    idx++;
+    serialize_preorder(root->left,data,node_cnt);
+    serialize_preorder(root->right,data,node_cnt);   
+}
+
+int* serialize(struct Node* root) {
+    
+    if(!root) return NULL;
+
+    int node_cnt = CountNodes(root);
+
+    printf("node_cnt : %d\n",node_cnt );
+    
+    int *data = (int *) malloc(sizeof(int)*(node_cnt));
+    serialize_preorder(root,data,node_cnt);
+
+    return data;  
+}
+
+
+int finddivision(int * preorder, int val, int low,int high) {
+	int i;
+	for(i =low;i<=high;i++ ) {
+		if(val < preorder[i])
+           break;
+	}
+	return i;
+}
+
+struct Node * deserialize(int *preorder,int low, int high ){
+
+	if(low > high) return NULL;
+    
+    struct Node *root = (struct Node*) malloc(sizeof(struct Node));
+
+	root->val = preorder[low];
+
+	int dividx = finddivision(preorder,root->val,low+1,high);
+
+	root->left = deserialize(preorder,low+1,dividx-1);
+	root->right = deserialize(preorder,dividx,high);
+
+	return root;
+}
+
+
+int cur_idx = 0;
+struct Node* deserialize_new(int *preorder, int num_nodes, int low, int high) {
+
+	if(cur_idx > num_nodes) return NULL;
+
+    struct Node *root = NULL;
+
+    if(preorder[cur_idx] > low && preorder[cur_idx] < high) {
+
+    	 root = (struct Node *)malloc(sizeof(struct Node));
+    	 root->val = preorder[cur_idx];
+         cur_idx++;
+         root->left = deserialize_new(preorder,num_nodes,low,root->val);
+         root->right = deserialize_new(preorder,num_nodes,root->val,high);	 
+    } 
+    
+    return root;
+}
+
+
+void serialize_bt(struct Node * root, vector<int> &vect) {
+
+	if(root == NULL) {
+		vect.push_back(-1);
+		return;
+	}
+
+	vect.push_back(root->val);
+	serialize_bt(root->left,vect);
+	serialize_bt(root->right,vect);
+}
+
+int bt_idx = 0;
+
+struct Node * deserialize_bt(std::vector<int> &vect) {
+
+	if(bt_idx == vect.size() || vect[bt_idx] == -1)
+		{
+			bt_idx+=1;
+			return NULL;
+		}
+
+	struct Node * root = (struct Node*) malloc (sizeof(struct Node));
+	root->val = vect[bt_idx];
+	bt_idx+=1;
+
+	root->left = deserialize_bt(vect);
+	root->right = deserialize_bt(vect);
+
+	return root;	
 }
 
 int main() {
@@ -285,11 +527,15 @@ level_order(root);
 
 printf("Node height:%d\n",node_height(root,5,0) );
 printf("Node height1:%d\n",node_height1(root,5) );
-printf("Node_hd: %d\n",node_hd(root,6,0) );
+printf("Node_hd: %d\n",node_hd(root,90,0) );
+printf("Node_hd1: %d\n",node_hd1(root,90,0) );
 
 queue<struct Node *> q; 
-path(root,&q,80);
-printf("q.size():%d\n",q.size() );
+printf("Inorder:\n");
+inorder(root);
+printf("Path:\n");
+int path_exist = path(root,&q,800);
+printf("path_exist:%d q.size():%d\n",path_exist,q.size() );
 
 while(!q.empty()) {
 	printf("Queue pop: %d\n",(q.front())->val);
@@ -306,5 +552,40 @@ std::stack<int> stack;
 print_stack(stack);
 */
 print_paths(root);
+struct Node * inOrderSuccessor_ = inOrderSuccessor(root,root->right->right);
+printf("inOrderSuccessor: %d\n",inOrderSuccessor_->val);
+
+//n=1;
+//printf("Count nodes :%d\n",CountNodes(root));
+
+int *bst_data = serialize(root);
+
+for(int i=0; i < 11; i++) {
+	printf("bst_preoder_serial_data: %d\n", bst_data[i]);
+}
+
+//struct Node * ds_root = deserialize(bst_data,0,CountNodes(root)-1);
+
+struct Node * ds_root = deserialize_new(bst_data,CountNodes(root),INT_MIN,INT_MAX);
+
+inorder(ds_root);
+/*
+vector<int> vect;
+
+serialize_bt(root,vect);
+for(int i=0; i < vect.size(); i++) {
+	printf("BT_preoder_serial_data: %d\n", vect[i]);
+}
+
+struct Node *ds_bt = deserialize_bt(vect);
+inorder(ds_bt);
+
+//free(bst_data);
+//bst_data = NULL;
+*/
+
+printLevelOrder(root);
+
+zigzag(root);
 
 }

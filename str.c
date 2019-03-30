@@ -224,5 +224,12 @@ int main()
    if(null_str == NULL || null_str == "") printf("null_str1\n");
    //if(null_str == "") printf("null_str1\n");
 
+   //bool_t *t;
+   bool *b1;
+   bool b = true;
+
+   b1 = &b;
+   printf("bool:%d\n",*b1 );
+
 	return 0;
 }

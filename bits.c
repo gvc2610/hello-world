@@ -49,8 +49,8 @@ int msb16_idx(uint16_t n)
 	return b;
 }
 
-int findComplement1(int num) {
-    
+int findComplement1(unsigned num) {
+  /*  
     if(num == 0) return 1;
     if(num == 1) return 0;
     
@@ -76,10 +76,25 @@ int findComplement1(int num) {
     }
     //printf("num_com:%d",num_com);
     return num_com;
+*/
+
+unsigned int mask = 0x80000000;
+
+if(num & mask) return ~num;
+
+ while(!(mask & num)) mask>>=1;
+
+  mask<<=1; mask-=1;
+
+  return num ^ mask;
+
 }
 
-int findComplement(int num) {
-    long i;
+int findComplement(unsigned num) {
+    long unsigned i,mask = 0x80000000;
+    
+    //if(num & mask) return num ^ 0xFFFFFFFF;
+
     for(i=1;i<=num;i*=2)
         num^=i;
     return num;
@@ -243,6 +258,7 @@ return gray_array;
 
 }
 
+
 int main()
 {
 	int32_t n;
@@ -289,13 +305,14 @@ int main()
     printf("x1:%x\n",0x123 & ((0x1<<9)-1));
     printf("x2:%x\n",0x123 & ((0x1<<8)-1));
 
-    printf("%x\n",findComplement(5) );
+    printf("compliment: %x\n",findComplement(0xFFFF00FF) );
+    printf("compliment1: %x\n",findComplement1(0xFFFF00FF) );
     printf("%d\n",isPowerOfFour(16) );
     int num = 0xA;
     printf("n1:%d  n2:%d\n",(num & (0x1 << 1)) >> 1,(num & (0x1<<3)) >> 3 );
 
      int num_codes = 0;
-    int *gray = gray_codes(10,&num_codes);
+    int *gray = gray_codes(3,&num_codes);
 
     for(int i = 0; i< num_codes; i++) {
       printf("gray code: %d\n",gray[i] );

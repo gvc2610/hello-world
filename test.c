@@ -324,6 +324,14 @@ scanf("%d",&input);
 int arr_check[input];
 print_arr(input);
 
+
+
+int a_test =5;
+
+typeof(a_test) b_test = 10;
+
+printf("%d\n",b_test );
+
 return 0;
 }
 

@@ -6,6 +6,22 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define NUM 3
+
+//#define g_arr[x]  int g_arr[x];              \
+                  for(int i = 0; i <x; i++ ) \
+                   { grr[i] = 2; }           \
+
+//g_arr[NUM];
+
+#if NUM == 2
+int g_arr[NUM] = {1,1};
+#elif NUM == 3
+int g_arr[NUM] = {1,1,1};
+#elif NUM == 1
+int g_arr[NUM] = {1}; 
+#endif
+
 int a2i(char A[]) {
 
 int n = strlen(A);
@@ -269,8 +285,96 @@ int solution(int A[], int N) {
 } 
 
 
+double myPow(double x, int n) {
+    double res = 1.0;
+    for (int i = n; i != 0; i /= 2) {
+        if (i % 2 != 0) res *= x;
+        x *= x;
+        printf("i:%d res:%f\n",i,res );
+    }
+
+    return n < 0 ? 1 / res : res;
+}
+
+
+void diamond(int lines) {
+    int i, j, spaces, starts;
+    if (lines %2 == 0) lines++;
+ 
+    spaces = (lines-1)/2;
+    starts = 1;
+    for (i = 1; i <= (lines+1)/2; i++) {
+        for (j=spaces; j; j--)
+            printf(" ");
+        for (j=starts; j; j--)
+            printf("*");
+        printf("\n");
+        spaces--;
+        starts+=2;
+     }
+     spaces = 1;
+     starts = lines-2;
+     for (i = 1; i <= (lines-1)/2; i++) {
+         for (j = spaces; j; j--)
+             printf(" ");
+         for (j = starts; j; j--)
+             printf("*");
+         printf("\n");
+         spaces++;
+         starts-=2;
+     }
+}
+
+
+struct test_size {
+  long int b;
+  char ch;
+  int a;
+};
+
+
+int * test_malloc(int n) {
+
+  int * data = (int *)malloc(sizeof(int)*n);
+
+  for(int i =0;i<n;i++) {
+    data[i] = i;
+  }
+
+  return data;
+}
+
+
+
 int main() {
 
+   int n =10;
+
+  int * data = test_malloc(n);
+
+  for(int i =0;i<n;i++) {
+   printf("test_malloc:%d\n",data[i]);
+  }
+
+
+  diamond(8);
+  printf("size of test_size:%d\n", sizeof(struct test_size));
+
+  char *str = NULL;
+  char null_char = '\0';
+
+  if(NULL == '\0'){
+    printf("NULL = '\0'\n");
+
+    if(str == '\0')
+      printf("NULL end of str tested\n");
+
+    if(NULL == (void*)0)
+      printf("NULL pointer tested\n");
+
+  } else printf("Not equal\n");
+
+/*
  printf("GET_CHAIN_NUM:%d %d %d %d\n",GET_CHAIN_NUM(1),GET_CHAIN_NUM(2),GET_CHAIN_NUM(4),GET_CHAIN_NUM(8));
  printf("GET_CHAIN_NUM_EXT:%d %d %d %d\n",GET_CHAIN_NUM(16),GET_CHAIN_NUM(32),GET_CHAIN_NUM(64),GET_CHAIN_NUM(128));
 
@@ -288,7 +392,13 @@ printf("%d\n",INT_MAX );
 printf("%lu   %lu    %lu    %zu    %zu\n",sizeof(arr),sizeof(iarr),sizeof(ch_arr), strlen(ch_arr), strlen(arr) );
 	printf("a2i:%d\n",a2i(arr) );
 
-
+typedef struct {
+    unsigned int    b1:1;
+    unsigned int    b2:8;
+    unsigned int    b3:7;
+    unsigned int    b4:8;
+    unsigned int    b5:7;
+    unsigned int    b6:1;} BIT_STRUCT;
 
 int endian = 0x01234567;
 int reverse_endian =  ((endian & 0xff) << 24u) | ((endian & 0xff00) << 8u) | ((endian & 0xff000000) >> 24u) | ((endian & 0x00ff0000) >> 8u); 
@@ -304,6 +414,17 @@ if(ch[0])
 printf("little endian\n");
 else
 printf("big endian\n");
+
+BIT_STRUCT bit_struct;
+memset(&bit_struct,0,sizeof(BIT_STRUCT));
+bit_struct.b1 = 1;
+
+ch = (char*)(&bit_struct);
+if(ch[0])
+printf("BIT_STRUCT little endian\n");
+else
+printf("BIT_STRUCT big endian\n");
+
 
 unsigned int bits = 0xdeadbeef;
 printf(" bits:%x rev_bits:%x  \n",bits,bit_reverse(bits) );
@@ -397,7 +518,7 @@ for(int i= 0; i < 2; i++)
         SA[i][j].b = 2;
   	}
 
-memset((void *)&SA[1][2],0,sizeof(SA[0][0]));
+memset((void *)&SA[1][0],0,sizeof(SA[0]));
 
   for(int i =0;i<3;i++)
   	for(int j=0;j<4;j++)
@@ -406,5 +527,10 @@ memset((void *)&SA[1][2],0,sizeof(SA[0][0]));
   int hex = 0x08;
   hex >>= 1;
   printf("hex:%x\n", hex);
+  printf("%f\n", myPow(3,5));
 
+ for(int i =0; i <NUM; i++)
+  printf("%d\n",g_arr[i] );
+
+*/
 }

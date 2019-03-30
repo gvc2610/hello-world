@@ -5,7 +5,7 @@
 #include <unistd.h>
  
 sem_t even_lock, odd_lock;
-pthread_mutex_t even_mutex, odd_mutex;
+pthread_mutex_t mutex ;
  
 void * even_thread(void *args) {
    int i = 0;
@@ -36,14 +36,15 @@ void * odd_thread(void *args) {
 void * even_thread4(void *args) {
    //int i = 0;
    while (g_j < 10) {
-      pthread_mutex_lock(&even_mutex);
+      pthread_mutex_lock(&mutex);
       //sleep(random()%3);
     //  printf("Even\n");
+      //sleep(1); 
       if(g_j%2 == 0) {
       printf("even:%d\n", g_j);
       g_j+=1;
     }
-      pthread_mutex_unlock(&even_mutex);
+      pthread_mutex_unlock(&mutex);
     }
     pthread_exit(0);
 }
@@ -51,14 +52,15 @@ void * even_thread4(void *args) {
 void * odd_thread4(void *args) {
     //int i = 1;
     while (g_j < 10) {
-        pthread_mutex_lock(&even_mutex);
+        pthread_mutex_lock(&mutex);
         // sleep(random()%4);
        // printf("Odd\n");
+        //sleep(1);
         if(g_j%2 !=0) {
         printf("odd:%d\n", g_j);
         g_j+=1;
       }
-        pthread_mutex_unlock(&even_mutex);
+        pthread_mutex_unlock(&mutex);
     }
     pthread_exit(0);
 }
@@ -76,8 +78,8 @@ int main() {
      pthread_join(thread[1], NULL);
  
  
-     pthread_mutex_init(&even_mutex, NULL);
-     pthread_mutex_init(&odd_mutex, NULL);
+     pthread_mutex_init(&mutex, NULL);
+     //pthread_mutex_init(&odd_mutex, NULL);
 
 /* wrong mu should be acquired and released by same thread 
      printf("Solution mutexes:\n");
@@ -102,7 +104,7 @@ int main() {
 
      sem_destroy(&even_lock);
      sem_destroy(&odd_lock);
-     pthread_mutex_destroy(&even_mutex);
-     pthread_mutex_destroy(&odd_mutex);
+     pthread_mutex_destroy(&mutex);
+     //pthread_mutex_destroy(&odd_mutex);
      return 0;
 }
