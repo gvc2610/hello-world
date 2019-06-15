@@ -122,6 +122,47 @@ for(int i = 0; i< buff.size(); i++) {
 
 }  
 
+ void printLevelOrder_msft(Node *root)  
+{  
+    // Base Case  
+    if (root == NULL) return;  
+  
+    // Create an empty queue for level order tarversal  
+    queue<Node *> q;
+
+     printf("level order msft\n");
+
+  
+    // Enqueue Root and initialize height  
+    q.push(root);  
+  
+    while (q.empty() == false)  
+    {  
+        // nodeCount (queue size) indicates number 
+        // of nodes at current lelvel.  
+        int node_cnt = q.size();  
+  
+        // Dequeue all nodes of current level and  
+        // Enqueue all nodes of next level  
+        while (node_cnt > 0) 
+        {    
+            Node *node = q.front();  
+
+           // cout << node->val << " ";  
+            printf("%d ", node->val);
+            q.pop();  
+
+            if (node->left != NULL)  
+                q.push(node->left);  
+            if (node->right != NULL)  
+                q.push(node->right);  
+            node_cnt--;  
+        }  
+        cout << endl;  
+    }  
+
+}  
+
 void zigzag(struct Node *root) {
 	 
 	if(!root) return; 
@@ -584,7 +625,7 @@ inorder(ds_bt);
 //bst_data = NULL;
 */
 
-printLevelOrder(root);
+printLevelOrder_msft(root);
 
 zigzag(root);
 

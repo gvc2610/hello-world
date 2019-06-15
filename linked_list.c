@@ -256,4 +256,9 @@ temp = arr;
 
 // printf("%d\n",temp. );
 
+
+struct Node *p1 = NULL;
+
+if(!p1 || !p1->next) printf("%s\n","NULL->NEXT" );
+
 }

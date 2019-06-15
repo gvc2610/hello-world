@@ -533,4 +533,6 @@ memset((void *)&SA[1][0],0,sizeof(SA[0]));
   printf("%d\n",g_arr[i] );
 
 */
+
+  
 }

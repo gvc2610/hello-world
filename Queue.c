@@ -1,10 +1,5 @@
 #include <stdio.h>
-
-int Q[5];
-int N = 5;
-int front = -1;
-int rear = -1;
-
+#include <stdlib.h>
 /*
 Queue
 -------------------------
@@ -14,86 +9,117 @@ Array indices:
 0 1 2 3 4 5 ...
 
 */
-int isFull() {
-	if ((rear + 1 + N)%N == front)
+
+
+typedef struct {
+    int * buff;
+    int front;
+    int rear;
+    int maxlen;
+} Queue_t;
+
+
+Queue_t * initCircQ(int size) {
+
+	Queue_t * Q = (Queue_t*) malloc(sizeof(Queue_t));
+    Q->buff = (int*)malloc(sizeof(int)*size);
+    Q->front = -1;
+    Q->rear = -1;
+    Q->maxlen = size;
+    return Q;
+}
+
+int isFull(Queue_t *Q) {
+	if ((Q->rear + 1 + Q->maxlen)%(Q->maxlen) == Q->front)
         return 1;
     else return 0;
 }
 
-int isEmpty() {
-	if(front== -1 && rear == -1 )
+int isEmpty(Queue_t *Q) {
+	if(Q->front== -1 && Q->rear == -1 )
 		return 1;
 	else return 0;
 }
 
-int enQueue(int q) {
+int enQueue(Queue_t *Q, int q) {
 
-if(isFull()) {
+if(isFull(Q)) {
     printf("%s\n","Q is full" );
 	return -1;
  }
 
 else {
-	if(isEmpty()) front += 1;     
-	  rear = (rear+N+1)%N;
-	  Q[rear] = q;
+	if(isEmpty(Q)) Q->front += 1;     
+	  
+	  Q->rear = (Q->rear+Q->maxlen+1) % (Q->maxlen);
+	  printf("rear:%d\n",Q->rear );
+	  Q->buff[Q->rear] = q;
 	  }
 
  }
 
-void printQ() {
-	if(isEmpty())
+void printQ(Queue_t *Q) {
+	if(isEmpty(Q)) {
 		printf("%s\n", "Q is Empty, nothing to print");
-	for(int i = front; i<=rear; i++) {
-		printf("printing Q[%d]:%d\n",i,Q[i] );
+		return;
+	}
+
+	for(int i = Q->front; i<=Q->rear; i++) {
+		printf("printing Q[%d]:%d\n",i,Q->buff[i] );
 	}
 }
 
-int deQueue() {
-	if(isEmpty()) {
+int deQueue(Queue_t *Q) {
+	if(isEmpty(Q)) {
 		printf("%s\n","Q is Empty" );
 	}
 
-   else if(front == rear) {
-        int temp = front;
-   		front = -1,rear =-1;
-   	    return Q[temp]; 
+   else if(Q->front == Q->rear) {
+        int temp = Q->front;
+   		Q->front = -1, Q->rear =-1;
+   	    return Q->buff[temp]; 
        	}
 
     else {
-    	int temp1 = front; 
-    	front = (front+1+N)%N;
-    	return Q[temp1]; 
+    	int temp1 = Q->front; 
+    	Q->front = (Q->front+1+Q->maxlen)%Q->maxlen;
+    	return Q->buff[temp1]; 
     }
 
 }
-int qFront();
-int isEmpty();
-int isFull();
+
+void deleteQueue(Queue_t *Q) {
+	free(Q->buff);
+	free(Q);
+}
 
 int main() 
 {
-enQueue(100);
-enQueue(200);
-enQueue(300);
-enQueue(400);
-printf("front:%d rear:%d\n",front,rear );
-enQueue(500);
-printQ();
 
-enQueue(600);
+Queue_t *Q = initCircQ(5);
 
-printf("deQueue():%d\n",deQueue());
-printf("deQueue():%d\n",deQueue());
-printf("deQueue():%d\n",deQueue());
+enQueue(Q,200);
+enQueue(Q,300);
+enQueue(Q,400);
+printf("front:%d rear:%d\n",Q->front,Q->rear );
+enQueue(Q,500);
+printQ(Q);
 
-printQ();
-printf("front:%d rear:%d\n",front,rear );
-printf("deQueue():%d\n",deQueue());
+enQueue(Q,600);
 
-printQ();
+printf("deQueue():%d\n",deQueue(Q));
+printf("deQueue():%d\n",deQueue(Q));
+printf("deQueue():%d\n",deQueue(Q));
 
-deQueue();
-deQueue();
+printQ(Q);
+printf("front:%d rear:%d\n",Q->front,Q->rear );
+printf("deQueue():%d\n",deQueue(Q));
+
+printQ(Q);
+
+deQueue(Q);
+deQueue(Q);
+
+deleteQueue(Q);
 
 }

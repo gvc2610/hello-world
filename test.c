@@ -215,6 +215,17 @@ printf("*1");
 if(NULL == (void*)-1)
 	printf("*-1" );
 
+if(NULL == '\0')
+    printf("tested NULL \0\n");
+
+char test_str_null[5] = "";
+
+printf("test_str_null:%s\n", test_str_null);
+
+if(NULL == test_str_null[0])
+printf("NULL is indeed test_str_null, strlen:%d\n",strlen(test_str_null));
+
+
 char *char_ptr;
 char ch = 'a';
 char_ptr =  &ch;

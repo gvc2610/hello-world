@@ -49,6 +49,19 @@ int msb16_idx(uint16_t n)
 	return b;
 }
 
+
+
+unsigned int msb_loc(unsigned int n) {
+
+  n |= n>>1;
+  n |= n>>2;
+  n |= n>>4;
+  n |= n>>8;
+  n |= n>>16;
+
+  return log2(n);
+}
+
 int findComplement1(unsigned num) {
   /*  
     if(num == 0) return 1;
@@ -89,6 +102,7 @@ if(num & mask) return ~num;
   return num ^ mask;
 
 }
+
 
 int findComplement(unsigned num) {
     long unsigned i,mask = 0x80000000;
@@ -318,6 +332,9 @@ int main()
       printf("gray code: %d\n",gray[i] );
     }
     free(gray);
+
+
+    printf("msb_loc:%d\n",msb_loc(16) );
 
 	return 0;
 }
