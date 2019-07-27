@@ -52,7 +52,7 @@ void main()
    printf("test_struc->val:%d\n",test_struc->test_val );
 
 	printf(" %d\n",sizeof(foo) );
-	printf("sizeof(foo.a) :%d\n",sizeof(f1.c) );
+	printf("sizeof(foo.a) :%d\n",sizeof(f1.a) );
     printf( "%p %p\n",&f1, &f1+ 2 );
     printf( "%d\n", ((foo*)0) + 7 );
     printf( "%d\n", &(((foo*)0)->a[4]) );

@@ -26,7 +26,7 @@
 // 	return b;
 // }
 
-uint8_t computeSetBits(uint16_t *num)
+uint8_t computeSetBits(uint64_t *num)
 {
     uint16_t count = 0;
     uint16_t temp = *num;

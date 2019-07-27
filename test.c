@@ -26,13 +26,12 @@ struct ABC
 struct ABC abc[2];
 struct ABC def;
 
-uint8_t computeSetBits(uint16_t *num)
+uint8_t computeSetBits(uint64_t num)
 {
     uint16_t count = 0;
-    uint16_t temp = *num;
-    while (temp)
+    while (num)
     {
-      temp &= (temp-1) ;
+      num &= (num-1) ;
       count++;
     }
     return count;
@@ -162,11 +161,12 @@ printf("inside !CHECK");
 #endif
 
 #if CHECK
-printf("inside CHECK");
+printf("inside CHECK\n");
 #endif
 
-uint16_t i = 6;
-printf("setbits %d: %d \n",i,computeSetBits(&i));
+uint64_t ii = 0xFFF;
+uint64_t jj = 0x0;
+printf("setbits %d: %d \n",ii,computeSetBits(jj | ii <<31));
 
 uint16_t j = 0xf0f0;
 uint16_t *bitArray1 = &j; 
