@@ -53,12 +53,13 @@ int msb16_idx(uint16_t n)
 
 unsigned int msb_loc(unsigned int n) {
 
+/*
   n |= n>>1;
   n |= n>>2;
   n |= n>>4;
   n |= n>>8;
   n |= n>>16;
-
+*/
   return log2(n);
 }
 
@@ -107,8 +108,6 @@ if(num & mask) return ~num;
 int findComplement(unsigned num) {
     long unsigned i,mask = 0x80000000;
     
-    //if(num & mask) return num ^ 0xFFFFFFFF;
-
     for(i=1;i<=num;i*=2)
         num^=i;
     return num;
@@ -224,7 +223,7 @@ int isBitPalindrome(unsigned int num) {
 int isBitPalindrome(unsigned int num) {
 
 int left = sizeof(num)*8-1, right = 0, cnt = 0;
-printf("size:%lu\n",sizeof(num) );
+//printf("size:%lu\n",sizeof(num) );
 
   while(left>right){
        if(((num & (0x1 << left)) >> left) == ((num & (0x1 << right)) >> right))  {
@@ -234,6 +233,21 @@ printf("size:%lu\n",sizeof(num) );
         left--;right++;
     }
     return cnt==(sizeof(num)*4)?1:0;
+}
+
+bool isBitPalindrome_new(unsigned char n) {
+
+  unsigned char reversed, aux = n,bit = 0;
+
+  while(aux) {
+
+    reversed = (reversed << 1) | (aux & 0x1);
+    printf(" bit:%x aux:%x reversed:%x\n",bit++,aux, reversed );
+    aux >>=1;
+  }
+     
+  printf("n:%x reversed:%x\n",n, reversed );
+     return (n == reversed); 
 }
 
 int * gray_codes(int num,int *num_codes) {
@@ -273,11 +287,22 @@ return gray_array;
 }
 
 
+int reverse_endian(int num) {
+//0xaabbccdd
+//0xddccbbaa
+
+  return  ( (num &0xff )<< 24 | (num & 0x0000ff00) <<8 | (num & 0x00ff0000) >>8  | (num & 0xff000000) >>24) ;
+
+}
+
 int main()
 {
 	int32_t n;
 	int i;
  
+
+  printf("reverse_endian:%x\n",reverse_endian(0xaabbccdd) );
+
 	// for (i = 0, n = 1; ; i++, n *= 42) {
 	// 	printf("42**%d = %10d(x%08x): M x%08x(%2d) L x%03x(%2d)\n",
 	// 		i, n, n,
@@ -299,6 +324,8 @@ int main()
 
     printf("palindrome:%d\n", isBitPalindrome(0x2f0ff0f4));
     printf("palindrome:%d\n", isBitPalindrome(0x0f0ff000));
+    printf("palindrome_new:%d\n", isBitPalindrome_new(0xC3));
+    printf("palindrome_new:%d\n", isBitPalindrome_new(0x11));
 
 
     printf("rev:%x",reversebits(0xaaaaaaaa));
@@ -334,7 +361,7 @@ int main()
     free(gray);
 
 
-    printf("msb_loc:%d\n",msb_loc(16) );
+    printf("msb_loc:%d\n",msb_loc(125) );
 
 	return 0;
 }

@@ -343,6 +343,19 @@ typeof(a_test) b_test = 10;
 
 printf("%d\n",b_test );
 
+
+
+
+int mat[10][7];
+
+int row_num = sizeof(mat)/sizeof(mat[0]);
+int col_num = sizeof(mat[0])/sizeof(mat[0][0]);
+
+printf("sizeof(mat):%d  sizeof(mat[0]):%d  row_num:%d col_num:%d \n", sizeof(mat),sizeof(mat[0]), row_num, col_num );
+
+
+
+
 return 0;
 }
 

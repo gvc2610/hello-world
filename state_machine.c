@@ -11,7 +11,7 @@ enum ret_codes { ok, fail, repeat};
 
 int entry_state(void) {
     printf("%s\n","In entry_state" );
-    return ok;
+    return fail;
 }
 int foo_state(void) {
     printf("%s\n","In foo_state" );
