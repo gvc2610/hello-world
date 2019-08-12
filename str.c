@@ -192,11 +192,33 @@ char * rotate_str(char * str,int n) {
 
 }
 
+
+char * my_strdup(char * src) {
+
+  if(!src) return NULL;
+
+  int len,i = 0;
+  char *dup;
+
+  while(src[len] !='\0') len++;
+
+  dup = (char*)malloc(len+1);
+
+  for(i =0; i<len;i++) {
+  	dup[i] = src[i];
+  }
+  
+  dup[i] = '\0';
+
+  return dup;
+
+}
+
 /* Driver program to test areRotations */
 int main()
 {
 	char *str1 = "abacd";
-	char *str2 = "abda";
+	char *str2 = "dab";
 
 	if (areRotations(str1, str2))
 	printf("Strings are rotations of each other\n");
@@ -206,6 +228,7 @@ int main()
     char *str3 = "abcdefgab";
     char *str4 = "gab";
     printf("%s\n",strstr1(str3,str4) );
+    printf("my_strdup:%s\n",my_strdup('\0') );
 
     char cpr_str[] = "aaaaaab";
 

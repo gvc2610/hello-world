@@ -374,6 +374,29 @@ int main() {
 
   } else printf("Not equal\n");
 
+
+int A[2][3] = {{1,2,3},{4,5,6}};  // *(*(A+x)+y)
+
+for(int i =0; i<2;i++)
+  for(int j=0;j<3;j++)
+    printf("A[%d][%d]:%d\n",i,j,A[i][j]);
+
+printf("A:%p &A[0][0]:%p &A[0]:%p A[0]:%p A[1]:%p *(*(A+1)+2):%d\n",A,&A[0][0],&A[0],A[0],A[1],*(*(A+1)+2) );
+printf("A+1:%p &A[0][0]+1:%p &A[0]+1:%p A[0]+1:%p\n",A+1,&A[0][0]+1,&A[0]+1,A[0]+1 );
+
+int *ptr = &A[0][0];
+int *ptr1 = &A[1][0]; 
+//ptr[0]= &A[0][0];
+printf("ptr:%p ptr+1:%p A[0][0]:%d  A[1][0]:%d  \n",ptr,ptr+1,ptr[2], *(ptr) );
+printf("ptr1:%p ptr1+1:%p A[0][0]:%d  A[1][0]:%d \n",ptr1,ptr1+1,ptr1[2], *(ptr1) );
+
+
+
+char str4[10] = "abcd";
+
+printf("strlen:%d\n", strlen(str4));
+
+ 
 /*
  printf("GET_CHAIN_NUM:%d %d %d %d\n",GET_CHAIN_NUM(1),GET_CHAIN_NUM(2),GET_CHAIN_NUM(4),GET_CHAIN_NUM(8));
  printf("GET_CHAIN_NUM_EXT:%d %d %d %d\n",GET_CHAIN_NUM(16),GET_CHAIN_NUM(32),GET_CHAIN_NUM(64),GET_CHAIN_NUM(128));
