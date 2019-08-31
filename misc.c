@@ -345,8 +345,34 @@ int * test_malloc(int n) {
 }
 
 
+typedef struct 
+{
+ int a;
+ int b;
+ int c; 
+} int_struct;
+
+typedef struct 
+{
+  int a;
+  char b;
+  int c;
+}mixed_struct;
+
 
 int main() {
+
+  char buff_arr[] = {0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xAA,0xBB,0xCC,0xDD,0xEE,0xFF};
+  printf("buff_arr:%x\n",  *(int16_t *)(&buff_arr[3]) );
+
+  int_struct * int_struct_t;
+  mixed_struct * mixed_struct_t;
+
+  int_struct_t = (int_struct *) buff_arr;
+  mixed_struct_t = (mixed_struct *) buff_arr;
+
+  printf("int_struct a:%x b:%x c:%x \n",int_struct_t->a,int_struct_t->b,int_struct_t->c );
+  printf("mixed_struct a:%x b:%x c:%x\n",mixed_struct_t->a,mixed_struct_t->b,mixed_struct_t->c );
 
    int n =10;
 

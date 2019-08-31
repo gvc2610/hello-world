@@ -57,11 +57,17 @@ typedef struct
 } mymutex_t;
 
 
-threadnode_t *pending_threads_head;
-threadnode_t *pending_threads_tail;
+TimerISR();
+TImer_set(int val);
+TImer_en_dis(bool en);
 
-threadnode_t *ready_threads_head;
-threadnode_t *ready_threads_tail;
 
-threadnode_t *running_thread;
 
+save_context();
+restore_context();
+make_context();
+
+disable_interrupts();
+enable_interrupts();
+
+queue <node*> pending,running;
