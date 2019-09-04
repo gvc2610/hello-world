@@ -70,4 +70,13 @@ make_context();
 disable_interrupts();
 enable_interrupts();
 
-queue <node*> pending,running;
+queue <node*> pending,ready;
+
+
+
+int main() {
+
+
+
+    
+}

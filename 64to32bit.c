@@ -13,8 +13,8 @@ int main(int argc, char const *argv[])
  uint8_t x1, x2, y1, y2, z1, z2; 
 /* set x1, x2, y1, y2 here */ 
 
-x2 = 0x02, x1 = 0x80; // MSB,LSB
-y2=  0x04, y1 = 0x80; 
+x2 = 0x00, x1 = 0xC8; // MSB,LSB
+y2=  0x00, y1 = 0x64; 
 
 z1 = z2 = 0; 
 

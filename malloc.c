@@ -12,8 +12,14 @@ struct s_block {
     char data[1];
 };
 
+
+
 typedef struct s_block *t_block;
-#define META_SIZE sizeof(struct block_meta)
+void *base=NULL;
+
+//#define META_SIZE sizeof(struct block_meta)
+#define BLOCK_SIZE sizeof(struct s_block)
+
 
 /* Get the block from and addr */
 t_block get_block(void *p)
@@ -46,7 +52,7 @@ struct block_meta *find_free_block(struct block_meta **last, size_t size) {
     }
     return current;
 }
-
+/*
 struct block_meta *request_space(struct block_meta* last, size_t size) {
     struct block_meta *block;
     block = sbrk(0);
@@ -65,7 +71,7 @@ struct block_meta *request_space(struct block_meta* last, size_t size) {
     block->magic = 0x12345678;
     return block;
 }
-
+*/
 void split_block(t_block b, size_t s) {
     t_block new;
     new = b->data + s;
@@ -74,6 +80,35 @@ void split_block(t_block b, size_t s) {
     new->free = 1;
     b->size = s;
     b->next = new;
+}
+
+t_block find_block (t_block *last , size_t size ){
+    t_block b=base;
+    while (b && !(b->free && b->size >= size )) {
+    *last = b;
+    b = b->next;
+    }
+    return (b);
+}
+
+/* Add a new block at the of heap */
+/* return NULL if things go wrong */
+t_block extend_heap (t_block last , size_t s)
+{
+    int sb;
+    t_block b;
+    b = sbrk (0);
+    sb = (int)sbrk( BLOCK_SIZE + s); // returns the last memory location address after allocating memory
+    if (sb < 0)
+    return (NULL );
+    b->size = s;
+    b->next = NULL;
+    b->prev = last;
+    b->ptr = b->data;
+    if (last)
+    last ->next = b;
+    b->free = 0;
+    return (b);
 }
 
 void *malloc(size_t size) {
@@ -113,6 +148,16 @@ struct block_meta *get_block_ptr(void *ptr) {
 }
 
 
+t_block fusion(t_block b){
+if (b->next && b->next ->free ){
+b->size += BLOCK_SIZE + b->next->size;
+b->next = b->next ->next;
+if (b->next)
+b->next->prev = b;
+}
+return (b);
+}
+
 /* The free */
 /* See free(3) */
 void free(void *p)
@@ -148,4 +193,14 @@ void free(void *p)
 // block_ptr->free = 1;
 // block_ptr->magic = 0x55555555;
 
+
+
+/*
+brk(2) place the break at the given adress addr and return 0 if successful, -1 otherwise. The
+global errno symbol indicate the nature of the error.
+sbrk(2) move the break by the given increment (in bytes.) Depending on system implementation,
+it returns the previous or the new break adress. On failure, it returns (void *)-1 and set
+errno.
+
+*/
 
