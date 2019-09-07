@@ -250,6 +250,15 @@ bool isBitPalindrome_new(unsigned char n) {
      return (n == reversed); 
 }
 
+
+bool isBitPalindrome_reverse(uint32_t n) {
+
+  int rev_n = reversebits(n);
+
+  return rev_n == n ? true:false;
+}
+
+
 int * gray_codes(int num,int *num_codes) {
 
    int code_cnt =  pow(2,num);
@@ -295,6 +304,54 @@ int reverse_endian(int num) {
 
 }
 
+/*
+r: 2
+l: 6
+2,3,4,5,6
+0b 
+  int rev_num = reversebits(n);
+   int mask = (1 << (left_idx - right_idx + 1)); // mask = 0b ..10000
+       mask = mask -1; //0b....1111
+       mask = mask << right_idx; //
+
+       rev_num = rev_num & mask;
+
+       return n | rev_num;
+*/
+
+uint32_t create_mask(int left_idx, int right_idx) {
+
+   int mask = (1 << (left_idx - right_idx + 1)); // mask = 0b ..10000
+       mask = mask -1; //0b....1111
+       mask = mask << right_idx; //
+       return mask;
+}
+
+int reverse_selectbits(uint32_t n, int left_idx, int right_idx) {
+  
+    int res = 0;
+    int num_bits = 8*((uint32_t)(&(res)+1)- (uint32_t)&res);
+    printf("num_bits:%d\n",num_bits );
+
+    int rev_num = reversebits(n);
+
+    int rev_left_idx = (num_bits-1) - right_idx; 
+    int rev_right_idx = (num_bits-1) - left_idx;
+
+    int rev_mask = create_mask(rev_left_idx,rev_right_idx);
+
+        rev_num = rev_num & rev_mask;
+        rev_num = rev_num >> rev_right_idx;
+
+   int mask = create_mask(left_idx,right_idx);
+      
+      res = (n & ~mask) | (rev_num << right_idx);
+       
+
+       return res;
+}
+
+
 int main()
 {
 	int32_t n;
@@ -302,6 +359,8 @@ int main()
  
 
   printf("reverse_endian:%x\n",reverse_endian(0xaabbccdd) );
+
+  printf("reverse_selectbits:%x\n",reverse_selectbits(0xABCDEF3A,7,4)); 
 
 	// for (i = 0, n = 1; ; i++, n *= 42) {
 	// 	printf("42**%d = %10d(x%08x): M x%08x(%2d) L x%03x(%2d)\n",
@@ -326,6 +385,8 @@ int main()
     printf("palindrome:%d\n", isBitPalindrome(0x0f0ff000));
     printf("palindrome_new:%d\n", isBitPalindrome_new(0xC3));
     printf("palindrome_new:%d\n", isBitPalindrome_new(0x11));
+    printf("isBitPalindrome_reverse:%d\n", isBitPalindrome_reverse(0xFF0000FF) );
+    printf("isBitPalindrome_reverse:%d\n", isBitPalindrome_reverse(0xFF1021FF) );
 
 
     printf("rev:%x",reversebits(0xaaaaaaaa));
