@@ -352,6 +352,32 @@ int reverse_selectbits(uint32_t n, int left_idx, int right_idx) {
 }
 
 
+uint32_t reverse_selectbits1(uint32_t n, int left_idx, int right_idx) {
+   
+   bool left_val = 0, right_val = 0;
+   int num_bits = (((uint32_t)&left_val + 1) - (uint32_t)&left_val)*8; 
+
+  if((left_idx > num_bits - 1) || (right_idx > num_bits -1) || left_idx < right_idx ) return -1;
+
+   while(left_idx >= right_idx) {
+        
+        left_val = (n & (1 << left_idx)) >> left_idx;
+        right_val = (n & (1 << right_idx)) >> right_idx;
+
+        if(left_val != right_val) {
+           n = n^(1 << left_idx);
+           n = n^(1 << right_idx);
+        } 
+
+        left_idx--,right_idx++;
+   }
+  
+  return n;
+
+}
+
+
+
 int main()
 {
 	int32_t n;
@@ -360,7 +386,9 @@ int main()
 
   printf("reverse_endian:%x\n",reverse_endian(0xaabbccdd) );
 
-  printf("reverse_selectbits:%x\n",reverse_selectbits(0xABCDEF3A,7,4)); 
+  printf("reverse_selectbits:%x\n",reverse_selectbits(0xABCAEF3A,7,4));
+  printf("reverse_selectbits1:%x\n",reverse_selectbits1(0xABCDEF3A,7,4)); 
+
 
 	// for (i = 0, n = 1; ; i++, n *= 42) {
 	// 	printf("42**%d = %10d(x%08x): M x%08x(%2d) L x%03x(%2d)\n",
