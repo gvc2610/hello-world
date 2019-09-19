@@ -357,7 +357,8 @@ uint32_t reverse_selectbits1(uint32_t n, int left_idx, int right_idx) {
    bool left_val = 0, right_val = 0;
    int num_bits = (((uint32_t)&left_val + 1) - (uint32_t)&left_val)*8; 
 
-  if((left_idx > num_bits - 1) || (right_idx > num_bits -1) || left_idx < right_idx ) return -1;
+  if((left_idx > num_bits - 1) || (right_idx > num_bits -1) || left_idx < right_idx ) 
+     return -1;
 
    while(left_idx >= right_idx) {
         
@@ -377,6 +378,26 @@ uint32_t reverse_selectbits1(uint32_t n, int left_idx, int right_idx) {
 }
 
 
+uint16_t multiply(uint8_t a, uint8_t b) {
+
+  uint16_t res = 0;
+  uint8_t cnt = 0;
+
+  while(b) {
+      
+      if(b & 0x1) {
+        res = res + (a << cnt);
+      }
+
+      b = b>>1;
+      cnt++;
+  }
+  
+  return res;
+
+}
+
+//int16_t signedmultiply()
 
 int main()
 {
@@ -388,6 +409,8 @@ int main()
 
   printf("reverse_selectbits:%x\n",reverse_selectbits(0xABCAEF3A,7,4));
   printf("reverse_selectbits1:%x\n",reverse_selectbits1(0xABCDEF3A,7,4)); 
+
+  printf("multiply num: %d\n", multiply(5,100));
 
 
 	// for (i = 0, n = 1; ; i++, n *= 42) {
