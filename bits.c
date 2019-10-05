@@ -354,7 +354,7 @@ int reverse_selectbits(uint32_t n, int left_idx, int right_idx) {
 
 uint32_t reverse_selectbits1(uint32_t n, int left_idx, int right_idx) {
    
-   bool left_val = 0, right_val = 0;
+   int left_val = 0, right_val = 0;
    int num_bits = (((uint32_t)&left_val + 1) - (uint32_t)&left_val)*8; 
 
   if((left_idx > num_bits - 1) || (right_idx > num_bits -1) || left_idx < right_idx ) 

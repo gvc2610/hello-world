@@ -50,10 +50,6 @@ void toggle_led(int *gpio_led_addr, int *led_time, int num) {
 }
 
 
-
-
-
-
 int main() {
 
 timer(1000*1000);
