@@ -422,7 +422,36 @@ char str4[10] = "abcd";
 
 printf("strlen:%d\n", strlen(str4));
 
+
+
+    int ab[10][10][10][10];     //b[x][y] ==    *(*(b+x) + y)
+    printf("s1=%d\n", sizeof(ab)); //  4*10^4
+    printf("s2=%d\n", sizeof(ab[0][0][0])); //4*10 
+    printf("s3=%d\n", sizeof(ab[0]));// 4*10^3
+
+
+typedef union{
+    int  i1;
+    char c1;
+    short s1;
+    long long LL1;// 8 bytes 
+}data_st;// ==  8 bytes
+
+//0x 00 00 00 00   00 00 00 00
+
+data_st   *pd = (data_st *)0x1000;
+{
+    printf("size1 = %d\n", sizeof(*pd)); // 8 bytes
+    printf("size2 = %d\n", sizeof(pd));//size of pointer 4
+    printf("p1=%x\n", pd);//0x1000
+    printf("p2=%x\n", &(pd->c1));//0x1000 
+}
  
+
+
+char test_str[] = "abcd";
+printf("sizeof(test_str)%d:\n",sizeof(test_str) );
+
 /*
  printf("GET_CHAIN_NUM:%d %d %d %d\n",GET_CHAIN_NUM(1),GET_CHAIN_NUM(2),GET_CHAIN_NUM(4),GET_CHAIN_NUM(8));
  printf("GET_CHAIN_NUM_EXT:%d %d %d %d\n",GET_CHAIN_NUM(16),GET_CHAIN_NUM(32),GET_CHAIN_NUM(64),GET_CHAIN_NUM(128));

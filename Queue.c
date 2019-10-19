@@ -72,6 +72,7 @@ void printQ(Queue_t *Q) {
 int deQueue(Queue_t *Q) {
 	if(isEmpty(Q)) {
 		printf("%s\n","Q is Empty" );
+		return -1;
 	}
 
    else if(Q->front == Q->rear) {
