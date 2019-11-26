@@ -21,7 +21,6 @@ int *ptr;
 int a;
 };
 
-
 void print_check(struct check chk) {
 	printf("inside: chk.a:%d   chk.ptr:%p   *chk.ptr:%d\n",chk.a,chk.ptr,*(chk.ptr));
 	*(chk.ptr) = 6;
@@ -38,10 +37,32 @@ struct test *val1 = val;
 	val1->test_val = 2;
 }
 
+struct test_byte {
+  int a0:1;
+  int a1:1;
+  int a2:1;
+  int a3:1;
+  int a4:1;
+  int a5:1;
+  int a6:1;
+  int a7:1;
+  int s8;
+ // int s9;
+};
+
+union char_byte { 
+
+
+struct test_byte a;
+char ch_byte;
+};
+
+
 void main()
 {
 	
-
+printf("sizeof(test_byte):%d\n",sizeof(struct test_byte) );    
+printf("sizeof(char_byte):%d\n",sizeof(union char_byte) );
    struct test *test_struc, test_struc1;
     test_struc1.test_val = 1;
    test_struc = &test_struc1;
@@ -157,6 +178,7 @@ typedef struct structa_tag
 {
 char    c;
 short int  s;
+int a;
 } structa_t;
 
 // structure B
@@ -164,7 +186,6 @@ typedef struct structb_tag
 {
 short int  s;
 char    c;
-int     i;
 } structb_t;
 
 // structure C
@@ -183,6 +204,8 @@ int 	 s;
 char    c;
 } structd_t;
 
+
+printf("sizeof(int):%d sizeof(short int):%d  sizeof(long int):%d\n",sizeof(int),sizeof(short int),sizeof(long int) );
 printf("sizeof(structa_t) = %d\n", sizeof(structa_t));
 printf("sizeof(structb_t) = %d\n", sizeof(structb_t));
 printf("sizeof(structc_t) = %d\n", sizeof(structc_t));

@@ -26,6 +26,42 @@
 // 	return b;
 // }
 
+/*
+full adder
+sum = a^b^cin
+caout = a.b + cin(a^b)
+*/
+int8_t bit_add(int8_t a,int8_t b) {
+
+uint8_t sum = 0;
+uint8_t a_=0,b_=0,Cin_=0,Cout_ = 0;
+
+ for(uint8_t i = 0; i <=7; i++) {
+
+    a_ = ((a & (0x1 << i))>>i);
+    b_ = ((b & (0x1 << i))>>i);
+
+    sum = sum | ((a_^ b_^ Cin_) << i);
+    Cout_ =  (a_& b_) | (Cin_ & (a_^b_)); 
+    printf("i:%d# a_:%x b_:%x sum:%0x Cin_:%x Cout_:%x\n",i, a_,b_,((sum & (0x1 << i))>>i),Cin_,Cout_ );
+    Cin_ = Cout_;
+    //carry_ = carry_ << 1;  
+  }
+
+  return sum;
+}
+
+
+// return a-b
+int8_t bit_subtract(int8_t a, int8_t b) {
+  
+  int8_t c =  bit_add(a, ((~b) + 1));       
+  return c;
+
+}
+
+       
+
 uint8_t computeSetBits(uint64_t *num)
 {
     uint16_t count = 0;
@@ -399,6 +435,17 @@ uint16_t multiply(uint8_t a, uint8_t b) {
 
 //int16_t signedmultiply()
 
+
+
+int next_greater_pow2(unsigned int num) {
+
+  num = num << 1 ;
+  while(num & (num - 1)) 
+    num = num & (num -1) ;
+
+  return num; 
+}
+
 int main()
 {
 	int32_t n;
@@ -412,6 +459,12 @@ int main()
 
   printf("multiply num: %d\n", multiply(5,100));
 
+  printf("bit_add:%d\n",bit_add(19,8) );
+  printf("bit_add:%d\n",bit_subtract(19,8));
+  printf("bit_add:%d\n",bit_subtract(19,25));
+
+
+  
 
 	// for (i = 0, n = 1; ; i++, n *= 42) {
 	// 	printf("42**%d = %10d(x%08x): M x%08x(%2d) L x%03x(%2d)\n",
@@ -474,6 +527,10 @@ int main()
 
 
     printf("msb_loc:%d\n",msb_loc(125) );
+
+    printf("msb_loc_pow2: %x\n", next_greater_pow2(0x101));
+    printf("msb_loc_pow2: %x\n", next_greater_pow2(0x1101));
+
 
 	return 0;
 }

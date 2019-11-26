@@ -49,7 +49,7 @@ bool AddTimer(unsigned short TimerId, unsigned short Period)
         	else
             {
                 /* Add the new timer to the end of the list */
-            	pTimer = pNewTimer;
+            	pTimer->pNext = pNewTimer;
             }
         }
 

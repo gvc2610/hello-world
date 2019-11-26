@@ -42,36 +42,6 @@ int valid_addr(void *p)
     return (0);
 }
 
-void *global_base = NULL;
-
-struct block_meta *find_free_block(struct block_meta **last, size_t size) {
-    struct block_meta *current = global_base;
-    while (current && !(current->free && current->size >= size)) {
-        *last = current;
-        current = current->next;
-    }
-    return current;
-}
-/*
-struct block_meta *request_space(struct block_meta* last, size_t size) {
-    struct block_meta *block;
-    block = sbrk(0);
-    void *request = sbrk(size + META_SIZE);
-    assert((void*)block == request); // Not thread safe.
-    if (request == (void*) - 1) {
-        return NULL; // sbrk failed.
-    }
-
-    if (last) { // NULL on first request.
-        last->next = block;
-    }
-    block->size = size;
-    block->next = NULL;
-    block->free = 0;
-    block->magic = 0x12345678;
-    return block;
-}
-*/
 void split_block(t_block b, size_t s) {
     t_block new;
     new = b->data + s;
@@ -204,3 +174,37 @@ errno.
 
 */
 
+
+
+
+/*
+void *global_base = NULL;
+
+struct block_meta *find_free_block(struct block_meta **last, size_t size) {
+    struct block_meta *current = global_base;
+    while (current && !(current->free && current->size >= size)) {
+        *last = current;
+        current = current->next;
+    }
+    return current;
+}
+/*
+struct block_meta *request_space(struct block_meta* last, size_t size) {
+    struct block_meta *block;
+    block = sbrk(0);
+    void *request = sbrk(size + META_SIZE);
+    assert((void*)block == request); // Not thread safe.
+    if (request == (void*) - 1) {
+        return NULL; // sbrk failed.
+    }
+
+    if (last) { // NULL on first request.
+        last->next = block;
+    }
+    block->size = size;
+    block->next = NULL;
+    block->free = 0;
+    block->magic = 0x12345678;
+    return block;
+}
+*/
