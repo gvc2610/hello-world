@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
  
 // uint32_t msb32(uint32_t n)
 // {
@@ -446,10 +447,86 @@ int next_greater_pow2(unsigned int num) {
   return num; 
 }
 
+void str_rev(char *str) {
+  int len = strlen(str);
+  char temp;
+  int start = 0, end = len-1;
+
+  while(start<end) {
+    temp =  str[start];
+    str[start] = str[end];
+    str[end] = temp;
+    start++,end--;
+  } 
+
+}
+
+char nibble2hex(char* bin_nibble, int len) {
+
+ int num = 0;
+ int idx = 0;
+ printf("nibble:%c, len:%d\n",*bin_nibble,len );
+
+ while(len) {
+
+  num = num + ( (0x1 & ((int)bin_nibble[len-1]-'0')) << idx);
+  printf("len:%d num:%d idx:%d bin_nibble[len-1]:%d\n",len,num,idx,(int)bin_nibble[len-1]-'0' );
+
+  len--;idx++;
+ }
+
+if(num<= 9) return num + '0';
+else return (num-10 + 'A');
+ 
+}
+
+//0b b7 b6 b5 b4 b3 b2 b1 b0
+char *bin2hex(char *bin) {
+ 
+ int len = strlen(bin);
+ int idx = len-1;
+ int hex_idx = 0;
+ int num_nibble = len/4;
+ printf("strlen:%d\n",strlen(bin) );
+
+ int hex_len = ((len%4)?(num_nibble+1):num_nibble) + 1; 
+
+printf("len:%d len_mod4:%d hex_len:%d\n",len,len%4,hex_len ); 
+
+char *hex_str =  (char*) malloc(hex_len);
+
+ while(num_nibble) {
+  hex_str[hex_idx] = nibble2hex(&bin[idx-3],4);
+   printf("hex_idx:%d idx:%d num_nibble:%d hex_str[hex_idx]:%c\n",hex_idx, idx,num_nibble,hex_str[hex_idx] );
+  hex_idx++;
+  idx= idx-4;
+  num_nibble--;
+ }
+
+ hex_str[hex_idx] = nibble2hex(&bin[0],len-(len & ~((0x1<<2)-1)));
+    printf("hex_idx:%d idx:%d num_nibble:%d hex_str[hex_idx]:%c\n",hex_idx, idx,num_nibble,hex_str[hex_idx] );
+
+ hex_idx++;
+ hex_str[hex_idx]= '\0';
+ printf("hex_str:%s\n",hex_str );
+
+ str_rev(hex_str);
+ return hex_str;
+}
+
 int main()
 {
 	int32_t n;
 	int i;
+  
+  char bin_str[] = "11110111111010";
+  //char test_str[] = "1011111010";
+   printf("strlen bin_str :%d mod:%d\n",strlen(bin_str),7%4);
+
+  printf("bin2hex:%s\n",bin2hex(bin_str));
+  //printf("nibble2hex: %c\n", nibble2hex(&bin_str[2],4));
+
+  return 0;
  
 
   printf("reverse_endian:%x\n",reverse_endian(0xaabbccdd) );
