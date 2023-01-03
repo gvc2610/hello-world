@@ -24,7 +24,35 @@ void func(std::unique_ptr<Test> &test)
 void func_unique(std::unique_ptr<Test> test)
 {
     cout<<"Inside func_unique. test.a= "<<test->a<< endl;
+
 }
+
+//void test_func(unique_ptr<Test> func_ptr)
+void test_func(unique_ptr<Test> &func_ptr)
+
+{
+    cout << "Inside test_func "<< func_ptr->a <<endl;
+    func_ptr->a = 15;
+}
+
+unique_ptr<Test> create_unique(int val)
+//void create_unique(int val)
+
+{
+    auto ptr = make_unique<Test>(val);
+    ptr->a = 10;
+    test_func(ptr);
+    return ptr;
+}
+
+// int main()
+// {
+//     cout<<"Hello World\n";
+//     unique_ptr ptr_main = ::create_unique(5);
+//     cout << ptr_main->a<<endl;
+
+//     return 0;
+// }
 
 int main()
 {
