@@ -2,104 +2,94 @@
  * LRU Cache Implementation in C
  * =============================
  *
- * Theory of Operation:
- * --------------------
- * An LRU (Least Recently Used) Cache organizes items in order of use, allowing us to quickly identify
- * which item hasn't been used for the longest time. When the cache reaches its capacity, the
- * least recently used item is evicted to make room for new items.
+ * Overview:
+ * ---------
+ * An LRU (Least Recently Used) Cache is a fixed-size data structure that
+ * automatically removes the least recently accessed items when it reaches capacity.
  *
- * This implementation uses two primary data structures working in tandem:
+ * Data Structures:
+ * ----------------
+ * 1. Doubly Linked List (DLL):
+ *    - Purpose: Maintains the order of items based on usage.
+ *    - Head: Most Recently Used (MRU) item.
+ *    - Tail: Least Recently Used (LRU) item.
+ *    - Complexity: Moving a node to the head is O(1) if we have a pointer to it.
  *
- * 1. Doubly Linked List:
- *    - Stores the actual cache items (Key, Value).
- *    - Maintains the order of usage.
- *    - The HEAD of the list represents the Most Recently Used (MRU) item.
- *    - The TAIL of the list represents the Least Recently Used (LRU) item.
- *    - Moving a node to the head or removing the tail is an O(1) operation.
+ * 2. Hash Table (Chaining):
+ *    - Purpose: Provides O(1) average time complexity for lookups.
+ *    - Mapping: Key -> Pointer to the corresponding DLL Node.
+ *    - Collision Handling: Separate chaining (linked list of HashNodes).
  *
- * 2. Hash Table (with Chaining):
- *    - Maps a Key to the corresponding Node in the Doubly Linked List.
- *    - Allows for O(1) average time complexity for lookups (get) and updates (put).
- *    - Uses separate chaining (linked lists) to resolve hash collisions.
+ * Time Complexity:
+ * ----------------
+ * - GET(key): O(1) average.
+ *   (Hash lookup + Move node to Head)
  *
- * ASCII Diagram:
+ * - PUT(key, value): O(1) average.
+ *   (Hash lookup + Create/Update node + Move to Head + Potential Eviction)
+ *
+ * Memory Layout:
  * --------------
- *
- *      Hash Table (Array of HashNodes)             Doubly Linked List (Cache Items)
- *      +---+                                       +------+     +------+     +------+
- *   0  | •-|-------------------------------------> | Node | <-> | Node | <-> | Node |
- *      +---+                                       | K:1  |     | K:5  |     | K:2  |
- *   1  | / | (NULL)                                | V:10 |     | V:50 |     | V:20 |
- *      +---+                                       +------+     +------+     +------+
- *   2  | •-|--------+                                 ^                        ^
- *      +---+        |                                 |                        |
- *      ...          |                              HEAD (MRU)               TAIL (LRU)
- *                   |
- *                   v
- *                +----------+
- *                | HashNode | (Collision Chain)
- *                | Key: 5   |
- *                | Node *---|-----> (Points to Node K:5)
- *                +----------+
- *
- * Operations:
- * -----------
- * - GET(key):
- *   1. Look up key in Hash Table -> Get Node pointer.
- *   2. If found, move Node to HEAD of Linked List (mark as most recently used).
- *   3. Return value.
- *
- * - PUT(key, value):
- *   1. Look up key in Hash Table.
- *   2. If exists: Update value, move Node to HEAD.
- *   3. If new:
- *      a. Create new Node, add to HEAD.
- *      b. Add mapping to Hash Table.
- *      c. If capacity exceeded: Remove TAIL Node (LRU), remove from Hash Table, free memory.
+ * The visualization function in this file prints the actual memory addresses
+ * to demonstrate how the Hash Table (Index) points to the Linked List (Data).
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // ---------------------------------------------------------------------------
 // Data Structures
 // ---------------------------------------------------------------------------
 
-// Doubly Linked List Node
-// Stores the actual data and links to maintain LRU order.
+/**
+ * Node (Doubly Linked List)
+ * Stores the actual data (Key-Value pair) and links for ordering.
+ */
 typedef struct Node {
-    int key;            // Cache Key
-    int value;          // Cache Value
-    struct Node *prev;  // Pointer to previous node (towards Head)
-    struct Node *next;  // Pointer to next node (towards Tail)
+    int key;            // Stored to allow reverse lookup (Node -> Key) during eviction
+    int value;          // The actual data
+    struct Node *prev;  // Pointer to the previous node (towards MRU/Head)
+    struct Node *next;  // Pointer to the next node (towards LRU/Tail)
 } Node;
 
-// Hash Map Node (for chaining)
-// Used in the Hash Table to map keys to Linked List Nodes.
+/**
+ * HashNode (Hash Table Entry)
+ * A wrapper used in the Hash Table's collision chains.
+ * It points to the actual data Node in the Doubly Linked List.
+ */
 typedef struct HashNode {
-    int key;                // Key (needed to verify match in collision chain)
-    Node *cacheNode;        // Pointer to the actual data Node in the Doubly Linked List
-    struct HashNode *next;  // Pointer to next HashNode (for collision handling)
+    int key;                // Key for collision resolution
+    Node *cacheNode;        // Pointer to the actual data Node in the DLL
+    struct HashNode *next;  // Pointer to the next HashNode in this bucket (chaining)
 } HashNode;
 
-// LRU Cache Structure
-// The main container for the cache.
+/**
+ * LRUCache
+ * The main container structure.
+ */
 typedef struct LRUCache {
-    int capacity;           // Maximum number of items
+    int capacity;           // Maximum number of items allowed
     int size;               // Current number of items
-    Node *head;             // Most Recently Used (MRU) item
-    Node *tail;             // Least Recently Used (LRU) item
-    HashNode **hashTable;   // Array of pointers to HashNodes
+    Node *head;             // Pointer to the MRU node
+    Node *tail;             // Pointer to the LRU node
+    HashNode **hashTable;   // Array of pointers to HashNodes (the buckets)
     int hashSize;           // Size of the hash table array
 } LRUCache;
 
 // ---------------------------------------------------------------------------
-// Helper Functions
+// Helper Functions: Allocation & Hashing
 // ---------------------------------------------------------------------------
 
-// Create a new Doubly Linked List Node
+/**
+ * Creates a new Doubly Linked List Node.
+ */
 Node* createNode(int key, int value) {
     Node* newNode = (Node*)malloc(sizeof(Node));
+    if (!newNode) {
+        perror("Failed to allocate Node");
+        exit(EXIT_FAILURE);
+    }
     newNode->key = key;
     newNode->value = value;
     newNode->prev = NULL;
@@ -107,59 +97,82 @@ Node* createNode(int key, int value) {
     return newNode;
 }
 
-// Create a new Hash Node
+/**
+ * Creates a new Hash Table Node.
+ */
 HashNode* createHashNode(int key, Node* cacheNode) {
     HashNode* newNode = (HashNode*)malloc(sizeof(HashNode));
+    if (!newNode) {
+        perror("Failed to allocate HashNode");
+        exit(EXIT_FAILURE);
+    }
     newNode->key = key;
     newNode->cacheNode = cacheNode;
     newNode->next = NULL;
     return newNode;
 }
 
-// Initialize LRU Cache
+/**
+ * Initializes the LRU Cache.
+ * @param capacity The maximum number of items the cache can hold.
+ */
 LRUCache* createCache(int capacity) {
     LRUCache* cache = (LRUCache*)malloc(sizeof(LRUCache));
+    if (!cache) {
+        perror("Failed to allocate LRUCache");
+        exit(EXIT_FAILURE);
+    }
     cache->capacity = capacity;
     cache->size = 0;
     cache->head = NULL;
     cache->tail = NULL;
     
-    // Initialize Hash Table
-    // We size the hash table larger than capacity (2x) to reduce the chance of collisions,
-    // improving average lookup performance.
+    // We size the hash table larger than capacity (2x) to reduce collisions.
+    // This is a simple heuristic for better performance.
     cache->hashSize = capacity * 2; 
     cache->hashTable = (HashNode**)calloc(cache->hashSize, sizeof(HashNode*));
+    if (!cache->hashTable) {
+        perror("Failed to allocate Hash Table");
+        exit(EXIT_FAILURE);
+    }
     
     return cache;
 }
 
-// Simple Hash Function
-// Maps a key to an index in the hash table array.
+/**
+ * Simple Hash Function.
+ * Maps a key to a valid index in the hash table array.
+ */
 int hash(LRUCache* cache, int key) {
     return abs(key) % cache->hashSize;
 }
 
 // ---------------------------------------------------------------------------
-// Hash Table Operations
+// Internal Logic: Hash Table Management
 // ---------------------------------------------------------------------------
 
-// Add a mapping (Key -> Node) to the Hash Table
+/**
+ * Adds a mapping (Key -> Node) to the Hash Table.
+ * Handles collisions by adding to the front of the chain.
+ */
 void addToHash(LRUCache* cache, int key, Node* node) {
     int index = hash(cache, key);
     HashNode* newNode = createHashNode(key, node);
     
-    // Insert at the beginning of the collision chain (simplest approach)
+    // Insert at the beginning of the linked list for this bucket
     newNode->next = cache->hashTable[index];
     cache->hashTable[index] = newNode;
 }
 
-// Remove a mapping from the Hash Table
+/**
+ * Removes a mapping from the Hash Table.
+ * Must traverse the collision chain to find the correct key.
+ */
 void removeFromHash(LRUCache* cache, int key) {
     int index = hash(cache, key);
     HashNode* current = cache->hashTable[index];
     HashNode* prev = NULL;
 
-    // Traverse the collision chain to find the key
     while (current != NULL) {
         if (current->key == key) {
             if (prev == NULL) {
@@ -177,26 +190,30 @@ void removeFromHash(LRUCache* cache, int key) {
     }
 }
 
-// Get the Doubly Linked List Node associated with a Key
+/**
+ * Retrieves the DLL Node associated with a Key.
+ * Returns NULL if the key is not found.
+ */
 Node* getFromHash(LRUCache* cache, int key) {
     int index = hash(cache, key);
     HashNode* current = cache->hashTable[index];
     
-    // Traverse collision chain
     while (current != NULL) {
         if (current->key == key) {
             return current->cacheNode;
         }
         current = current->next;
     }
-    return NULL; // Not found
+    return NULL;
 }
 
 // ---------------------------------------------------------------------------
-// Linked List Operations
+// Internal Logic: Doubly Linked List Management
 // ---------------------------------------------------------------------------
 
-// Add a Node to the front of the list (Mark as MRU)
+/**
+ * Adds a Node to the HEAD of the list (marking it as Most Recently Used).
+ */
 void addToHead(LRUCache* cache, Node* node) {
     node->next = cache->head;
     node->prev = NULL;
@@ -207,37 +224,44 @@ void addToHead(LRUCache* cache, Node* node) {
     
     cache->head = node;
     
-    // If list was empty, head is also tail
+    // If the list was empty, this node is also the tail
     if (cache->tail == NULL) {
         cache->tail = node;
     }
 }
 
-// Remove a Node from the list (does not free memory)
+/**
+ * Unlinks a Node from its current position in the list.
+ * Does NOT free the memory.
+ */
 void removeNode(LRUCache* cache, Node* node) {
     if (node->prev != NULL) {
         node->prev->next = node->next;
     } else {
-        // Node was head
+        // Node was Head
         cache->head = node->next;
     }
 
     if (node->next != NULL) {
         node->next->prev = node->prev;
     } else {
-        // Node was tail
+        // Node was Tail
         cache->tail = node->prev;
     }
 }
 
-// Move an existing node to the head (Update usage)
+/**
+ * Moves an existing Node to the HEAD (MRU position).
+ */
 void moveToHead(LRUCache* cache, Node* node) {
     removeNode(cache, node);
     addToHead(cache, node);
 }
 
-// Remove the Least Recently Used item (Tail)
-// Returns the node so the caller can free it and remove from hash map
+/**
+ * Removes the Tail Node (Least Recently Used).
+ * Returns the node pointer so the caller can free it and remove from hash.
+ */
 Node* removeTail(LRUCache* cache) {
     Node* node = cache->tail;
     if (node != NULL) {
@@ -250,59 +274,56 @@ Node* removeTail(LRUCache* cache) {
 // Public API
 // ---------------------------------------------------------------------------
 
-// Get value from cache
-// Returns -1 if not found. Updates usage (moves to head) if found.
+/**
+ * GET Operation
+ * Retrieves a value from the cache.
+ * Side Effect: Moves the accessed item to the HEAD (MRU).
+ * Returns -1 if not found.
+ */
 int get(LRUCache* cache, int key) {
     Node* node = getFromHash(cache, key);
     if (node == NULL) {
         return -1; // Not found
     }
-    // Found: Move to head to mark as recently used
+    // Found: Update recency
     moveToHead(cache, node);
     return node->value;
 }
 
-// Put value into cache
-// Inserts new item or updates existing. Evicts LRU if full.
+/**
+ * PUT Operation
+ * Inserts a key-value pair into the cache.
+ * If key exists: Updates value and moves to HEAD.
+ * If key is new: Adds to HEAD. If full, evicts TAIL (LRU).
+ */
 void put(LRUCache* cache, int key, int value) {
     Node* node = getFromHash(cache, key);
 
     if (node != NULL) {
-        // Case 1: Key exists
-        // Update value and move to head (MRU)
+        // Case 1: Update existing key
         node->value = value;
         moveToHead(cache, node);
     } else {
-        // Case 2: Key does not exist
+        // Case 2: Insert new key
         Node* newNode = createNode(key, value);
         
         if (cache->size >= cache->capacity) {
-            // Cache full: Evict LRU (Tail)
+            // Cache is full - Evict LRU
             Node* tail = removeTail(cache);
             removeFromHash(cache, tail->key);
             free(tail);
             cache->size--;
         }
         
-        // Add new node to Head and Hash Table
         addToHead(cache, newNode);
         addToHash(cache, key, newNode);
         cache->size++;
     }
 }
 
-// Print Cache state (for debugging)
-void printCache(LRUCache* cache) {
-    Node* current = cache->head;
-    printf("Cache (Head/MRU -> Tail/LRU): ");
-    while (current != NULL) {
-        printf("[%d:%d] ", current->key, current->value);
-        current = current->next;
-    }
-    printf("\n");
-}
-
-// Free the cache and all allocated memory
+/**
+ * Frees all memory associated with the cache.
+ */
 void freeCache(LRUCache* cache) {
     // 1. Free Linked List Nodes
     Node* current = cache->head;
@@ -322,47 +343,160 @@ void freeCache(LRUCache* cache) {
         }
     }
     
-    // 3. Free Array and Cache Structure
+    // 3. Free Array and Struct
     free(cache->hashTable);
     free(cache);
 }
 
 // ---------------------------------------------------------------------------
-// Main Driver
+// Visualization (Debug Tool)
 // ---------------------------------------------------------------------------
-int main() {
-    printf("Initializing LRU Cache with capacity 3...\n");
-    LRUCache* cache = createCache(3);
 
-    printf("\n--- Adding Elements ---\n");
-    printf("Put (1, 10)\n");
-    put(cache, 1, 10);
-    printCache(cache);
+/**
+ * Prints a detailed ASCII diagram of the cache's internal memory state.
+ * Shows pointers, addresses, and links between Hash Table and Linked List.
+ */
+void visualizeCache(LRUCache* cache) {
+    printf("\n      Cache HEAD: %p  |  Cache TAIL: %p\n", (void*)cache->head, (void*)cache->tail);
+    printf("      --------------------------------------------------------------------------------\n");
+    printf("      [HASH TABLE]                [INTERMEDIARY]              [DOUBLY LINKED LIST]\n");
+    printf("      (Array Idx)                 (HashNodes)                 (Data Nodes)\n\n");
 
-    printf("Put (2, 20)\n");
-    put(cache, 2, 20);
-    printCache(cache);
+    for (int i = 0; i < cache->hashSize; i++) {
+        HashNode* hNode = cache->hashTable[i];
+        
+        if (hNode == NULL) {
+            printf("   %d  [ NULL ]\n\n", i);
+        } else {
+            int first = 1;
+            while (hNode != NULL) {
+                // Determine if this node is Head or Tail for labeling
+                const char* label = "";
+                if (hNode->cacheNode == cache->head && hNode->cacheNode == cache->tail) label = " <--- HEAD & TAIL";
+                else if (hNode->cacheNode == cache->head) label = " <--- HEAD";
+                else if (hNode->cacheNode == cache->tail) label = " <--- TAIL";
 
-    printf("Put (3, 30)\n");
-    put(cache, 3, 30);
-    printCache(cache);
+                // Label for the HashNode box
+                char hashTitle[20];
+                if (first) sprintf(hashTitle, "HashHead");
+                else       sprintf(hashTitle, "HashNode");
 
-    printf("\n--- Accessing Elements (Updates MRU) ---\n");
-    printf("Get (1) -> %d\n", get(cache, 1));
-    printCache(cache);
+                // Print Hash Table connection or Chain connection
+                if (first) {
+                    printf("   %d  [ %14p ]------>[ %-10s ]              +--------------------------+\n", i, (void*)hNode, hashTitle);
+                } else {
+                    printf("                                   | next       \n");
+                    printf("                                   v            \n");
+                    printf("                                  [ %-10s ]              +--------------------------+\n", hashTitle);
+                }
+                
+                // Print HashNode details and pointer to Data Node
+                printf("                                  | @ %10p |              | @ %18p |%s\n", (void*)hNode, (void*)hNode->cacheNode, label);
+                printf("                                  | Key: %-6d  |              | Key: %-6d Val: %-6d|\n", hNode->key, hNode->cacheNode->key, hNode->cacheNode->value);
+                
+                // Format pointers for Data Node
+                char prevStr[20], nextStr[20];
+                if (hNode->cacheNode->prev) sprintf(prevStr, "%p", (void*)hNode->cacheNode->prev); else sprintf(prevStr, "NULL");
+                if (hNode->cacheNode->next) sprintf(nextStr, "%p", (void*)hNode->cacheNode->next); else sprintf(nextStr, "NULL");
 
-    printf("\n--- Adding Element when Full (Eviction) ---\n");
-    printf("Put (4, 40) (Should evict LRU: 2)\n");
-    put(cache, 4, 40);
-    printCache(cache);
-
-    printf("\n--- Verifying Eviction ---\n");
-    printf("Get (2) -> %d (Expected: -1)\n", get(cache, 2)); 
+                // Print Data Node links
+                printf("                                  | cacheNode--|------------->| prev: %-18s |\n", prevStr);
+                printf("                                  | %10p |              | next: %-18s |\n", (void*)hNode->cacheNode, nextStr);
+                
+                // Format next pointer for HashNode
+                char nextHashStr[20];
+                if (hNode->next) sprintf(nextHashStr, "%p", (void*)hNode->next); else sprintf(nextHashStr, "NULL");
+                
+                // Print HashNode footer
+                printf("                                  | next-------|              +--------------------------+\n");
+                printf("                                  | %10s | \n", nextHashStr);
+                printf("                                  +------------+\n");
+                
+                hNode = hNode->next;
+                first = 0;
+            }
+            printf("\n");
+        }
+    }
     
-    printf("\n--- Another Eviction ---\n");
-    printf("Put (5, 50) (Should evict LRU: 3)\n");
-    put(cache, 5, 50);
-    printCache(cache);
+    // Print simple list order summary
+    printf("      List Order (MRU -> LRU): ");
+    Node* curr = cache->head;
+    while(curr) {
+        printf("[%d:%d] <-> ", curr->key, curr->value);
+        curr = curr->next;
+    }
+    printf("NULL\n");
+    printf("      --------------------------------------------------------------------------------\n");
+}
+
+// ---------------------------------------------------------------------------
+// Main Driver (Demonstration)
+// ---------------------------------------------------------------------------
+
+int main() {
+    // Setup: Capacity 5 -> Hash Size 10. Hash Function: Key % 10.
+    printf("================================================================================\n");
+    printf("LRU CACHE VISUALIZATION DEMO\n");
+    printf("Capacity: 5 | Hash Size: 10 | Hash Function: Key %% 10\n");
+    printf("================================================================================\n");
+
+    LRUCache* cache = createCache(5);
+    visualizeCache(cache);
+
+    // Scenario 1: Basic Insertion & Chaining
+    printf("\n[SCENARIO 1] Hash Collisions & Chaining\n");
+    printf("Adding keys 1, 11, 21. All map to Index 1 (1 %% 10 == 1).\n");
+    
+    printf("\n> Put(1, 10)\n");
+    put(cache, 1, 10);
+    visualizeCache(cache);
+    
+    printf("\n> Put(11, 110)\n");
+    put(cache, 11, 110);
+    visualizeCache(cache);
+    
+    printf("\n> Put(21, 210)\n");
+    put(cache, 21, 210);
+    visualizeCache(cache);
+
+    // Scenario 2: Filling the Cache
+    printf("\n[SCENARIO 2] Filling the Cache\n");
+    printf("Adding keys 2 and 12. Both map to Index 2.\n");
+    
+    printf("\n> Put(2, 20)\n");
+    put(cache, 2, 20);
+    visualizeCache(cache);
+    
+    printf("\n> Put(12, 120)\n");
+    put(cache, 12, 120);
+    visualizeCache(cache);
+    
+    // Scenario 3: Access & Reordering
+    printf("\n[SCENARIO 3] Access & Reordering (MRU Update)\n");
+    printf("Accessing Key 1. It is currently deep in the list and at the bottom of the hash chain.\n");
+    printf("Expectation: Key 1 moves to HEAD of the list. Hash chain remains unchanged.\n");
+    
+    printf("\n> Get(1) -> Returns %d\n", get(cache, 1));
+    visualizeCache(cache);
+
+    // Scenario 4: Eviction
+    printf("\n[SCENARIO 4] Eviction (Capacity Reached)\n");
+    printf("Cache is full (Size 5). Adding Key 10 (Index 0).\n");
+    printf("Expectation: LRU item (Key 11) is evicted. Key 10 is added.\n");
+    
+    printf("\n> Put(10, 100)\n");
+    put(cache, 10, 100);
+    visualizeCache(cache);
+
+    // Scenario 5: Eviction with Collision
+    printf("\n[SCENARIO 5] Eviction with Collision\n");
+    printf("Adding Key 20 (Index 0). Collides with Key 10.\n");
+    printf("Expectation: Next LRU item (Key 21) is evicted. Key 20 is added to Index 0 chain.\n");
+    
+    printf("\n> Put(20, 200)\n");
+    put(cache, 20, 200);
+    visualizeCache(cache);
 
     printf("\nCleaning up...\n");
     freeCache(cache);
